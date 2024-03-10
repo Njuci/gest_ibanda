@@ -52,7 +52,7 @@ class anne_scolaire:
         self.selected_id=IntVar()
         self.selected_annee=StringVar()
         self.selected_statut=BooleanVar()
-
+        self.E=None
 
         self.tree=Treeview(self.fen, columns=('Id','Designation','Statut'), show='headings')
         self.tree.heading('Id', text='Id')
@@ -99,7 +99,7 @@ class anne_scolaire:
                                 
             for i, row in enumerate(data):
               #colorer vert la case si l'année scolaire est en cours sinon la colorer en rouge
-        
+            
 
                 if row[2]==1:
                     E="V"
