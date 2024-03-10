@@ -42,8 +42,7 @@ class Login_front:
                     showinfo("succès","vous etes connectées")
                 else:
                     print("cursor ec")
-                    showerror("Erreur","Nom d'utilisateur ou mot de passe incorrect")
-            
+                    
 
                 
         

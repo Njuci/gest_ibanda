@@ -18,7 +18,8 @@ class Connexion:
             showerror("Erreur",str(e)) 
             return False     
 
-                      
+    def get_curseur(self):
+        return self.curseur                 
     def get_connexion(self):
         return self.curseur
     def get_parametres_connexion(self):
