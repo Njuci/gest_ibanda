@@ -61,10 +61,21 @@ class anne_scolaire:
         self.tree.column('Id',width=20)
         self.tree.column('Designation',width=100)
         self.tree.column('Statut',width=50)
+        #colorer les cases du treeview en fonction de la valeur de la colonne statut
+        
+        
         self.tree.tag_configure("V", background="green")
         self.tree.tag_configure("F", background="red")
         self.remplir_tree()
         self.tree.place(x=350,y=250)
+    def supprier(self):
+        self.get_entry()
+        annee=AnneScolaire(self.selected_annee,self.selected_statut)
+        if annee.delete(self.connexion.get_curseur()):
+            showinfo("succès","l'année scolaire a été supprimée")
+            self.remplir_tree()
+        else:
+            showerror("Erreur","l'année scolaire n'a pas été supprimée")
     
     def modify(self):
         self.get_entry()
@@ -99,8 +110,6 @@ class anne_scolaire:
                                 
             for i, row in enumerate(data):
               #colorer vert la case si l'année scolaire est en cours sinon la colorer en rouge
-            
-
                 if row[2]==1:
                     E="V"
                 else:
