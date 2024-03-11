@@ -26,7 +26,7 @@ class ClasseFront:
         self.fen=Tk()
     
         self.fen.title("Classe")
-        self.fen.geometry("800x600+150+100")
+        self.fen.geometry("800x600+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
         self.side_bar=SideBar(self.fen,self.connexion.get_curseur())
@@ -80,6 +80,7 @@ class ClasseFront:
             self.E=Classe(self.tex_nom.get())
             if self.E.update(self.connexion.get_curseur(),self.selected_id):
                 self.afficher()
+                self.E=None
                 showinfo("Succès","Modification réussie")
             else:
                 showerror("Echec","Modification échouée")
@@ -88,6 +89,7 @@ class ClasseFront:
     def supprimer(self):
         if self.E==None:
             self.E=Classe(self.tex_nom.get())
+            self.E=None
             if self.E.delete(self.connexion.get_curseur()):
                 self.afficher()
                 showinfo("Succès","Suppression réussie")

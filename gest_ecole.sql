@@ -19,7 +19,8 @@ create table utilisateur(
 id_user int auto_increment primary key,
 username varchar(20) unique,
 pass_word varchar(20),
-user_type varchar(6)
+user_type varchar(6),
+
 );
 create table classe(
 id_class int auto_increment primary key,
