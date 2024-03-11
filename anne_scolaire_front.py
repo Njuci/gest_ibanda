@@ -19,6 +19,7 @@ from tkinter.messagebox import showerror,showinfo,showwarning
 from anne_scolaire_back import AnneScolaire
 from tkinter.ttk import Treeview
 from login_back import Connexion
+from side_bar import SideBar    
 class anne_scolaire:
     def __init__(self):
         self.connexion=Connexion()
@@ -29,6 +30,8 @@ class anne_scolaire:
         self.fen.geometry("800x600+150+100")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
+        self.side_bar=SideBar(self.fen,self.connexion.get_curseur())
+        self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Année scolaire",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
         self.label_nom=Label(self.fen,text="Nom de l'année scolaire:",font=("Times",15),fg="black",background='#51a596')

@@ -33,7 +33,7 @@ class AnneScolaire:
     def update(self,curseur,id):
         try:
             curseur.execute("update anne_scolaire set nom=%s,encours=%s where id=%s",(self.nom,self.encours,id))
-            #curseur.execute("update anne_scolaire set encours=%s where nom=%s",(self.encours,self.nom))
+            curseur.execute("update anne_scolaire set encours=%s where nom=%s",(self.encours,self.nom))
             return True
         except Exception as e:
             print(str(e))
