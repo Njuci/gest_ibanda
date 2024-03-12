@@ -67,8 +67,8 @@ class anne_scolaire:
         #colorer les cases du treeview en fonction de la valeur de la colonne statut
         
         
-        self.tree.tag_configure("V", background="green")
-        self.tree.tag_configure("F", background="red")
+        self.tree.tag_configure('green', background="green")
+        self.tree.tag_configure('red', background="red")
         self.remplir_tree()
         self.tree.place(x=350,y=250)
     def supprier(self):
@@ -95,13 +95,12 @@ class anne_scolaire:
             showinfo("succès","l'année scolaire a été ajoutée")
             self.remplir_tree()
         else:
-
             showerror("Erreur","l'année scolaire n'a pas été ajoutée")
     # colorer les cases du treeview en fonction de la valeur de la colonne statut
         
     def apply_conditional_formatting(self,value):
         # Votre condition ici (par exemple, si value == "actif")
-        return "green" if value == "V" else "red"
+        return 'green' if value == 'V' else 'red'
     
     def remplir_tree(self):
         a=AnneScolaire("FF",True)
@@ -114,9 +113,9 @@ class anne_scolaire:
             for i, row in enumerate(data):
               #colorer vert la case si l'année scolaire est en cours sinon la colorer en rouge
                 if row[2]==1:
-                    E="V"
+                    E='V'
                 else:
-                    E="F"
+                    E='F'
                 #colorer vert la case si l'année scolaire est en cours sinon la colorer en rouge
                 
                 self.tree.insert('','end',values=(row[0],row[1],E),tags=(self.apply_conditional_formatting(E),))

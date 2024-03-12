@@ -19,7 +19,7 @@ create table utilisateur(
 id_user int auto_increment primary key,
 username varchar(20) unique,
 pass_word varchar(20),
-user_type varchar(6),
+user_type varchar(6)
 
 );
 create table classe(
@@ -39,7 +39,7 @@ nom varchar(30) unique
  );
 create table eleve(
 id_eleve int auto_increment  primary key,
-num_permenant varchar(30) unique,
+num_permanant varchar(30) unique,
 nom_eleve varchar(30),
 sexe char(1),
 date_nais date,

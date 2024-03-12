@@ -24,12 +24,12 @@ class eleve_back:
         lieu_nais (str): The student's place of birth.
     """
     
-    def __init__(self, num_permenant: int, nom_eleve: str, sexe: str, date_nais: str, lieu_nais: str):
+    def __init__(self, num_permenant:str, nom_eleve: str, sexe: chr, date_nais: str, lieu_nais: str):
         """
         Initializes the eleve_back object with the provided values for the student's information.
         
         Args:
-            num_permenant (int): The student's permanent number.
+            num_permenant (str): The student's permanent number.
             nom_eleve (str): The student's name.
             sexe (str): The student's gender.
             date_nais (str): The student's date of birth.
@@ -59,7 +59,9 @@ class eleve_back:
         """
         try:
             # Add code here to save the student's information
-            curseur.execute("insert into eleve values(%s,%s,%s,%s,%s)",(self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais,))
+            query="insert into eleve (num_permanant,nom_eleve,sexe,date_nais,lieu_nais)  values(%s,%s,%s,%s,%s)",(self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais)
+            print(query)
+            curseur.execute(query)
             return True
         except Exception as e:
             # Handle any exceptions that occur during saving

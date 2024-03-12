@@ -97,21 +97,38 @@ class EleveFront:
         self.tex_nom.delete(0,END)
         self.tex_lieu.delete(0,END)
         self.tex_num.delete(0,END)
+    
+    # add a student in database
+    def add_sudent(self):
+
+
+        pass
+        
+
+
+
+
+
     def ajouter(self):
-        #ajouter un eleve
-        if self.E==None:
-            self.E=eleve_back(self.tex_num.get(),self.tex_nom.get(),self.radio_sexe.get(),self.tex_date.get(),self.tex_lieu.get())
-            if self.E.save(self.connexion.get_curseur()):
+        eleve=eleve_back(self.tex_num.get(),self.tex_nom.get(),self.radio_sexe.get(),
+                         self.tex_date.get(),
+                         self.tex_lieu.get())
+
+        if self.tex_num.get() !="" and self.tex_nom.get() != "" and self.tex_lieu.get() !="":
+            f=Connexion()
+            if eleve.save(self.connexion.get_curseur()):
+                showinfo("Succès","Elève enrégistré")
                 self.afficher()
-                showinfo("Succès","Ajout réussi")
+
             else:
-                showerror("Echec","Ajout échoué")
+                u=9
         else:
-            showwarning("Echec","Veuillez vider le formulaire")
+            showwarning("Echec","veuillez remplir tout les champs")
+
     def modify(self):   
         #modifier un eleve
         if self.E==None:
-            self.E=eleve_back(self.tex_nom.get(),self.radio_sexe.get(),self.tex_date.get(),self.tex_lieu.get())
+            self.E=eleve_back(self.tex_nom.get(),chr(self.radio_sexe.get()),self.tex_date.get(),self.tex_lieu.get())
             if self.E.update(self.connexion.get_curseur(),self.selected_id):
                 self.afficher()
                 self.E=None
