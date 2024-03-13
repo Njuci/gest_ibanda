@@ -1,15 +1,28 @@
+
 """
+
+create table eleve(
+id_eleve int auto_increment  primary key,
+num_permanant varchar(30) unique,
+nom_eleve varchar(30),
+sexe char(1),
+date_nais date,
+lieu_nais varchar(30)
+);
+
 en se basant sur les codes de class_front 
 je fais une interface graphique d'ajout, de modification et de suppression d'un élève et en metant le meme sidebar
 """
 import datetime as dt
+from tkcalendar import DateEntry
 from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
 from eleve_back import eleve_back
-from tkinter.ttk import Treeview
 from login_back import Connexion
 from side_bar import SideBar
-from tkcalendar import DateEntry
+from tkinter.ttk import Treeview
+
+
 class EleveFront:
     def __init__(self):
         self.connexion=Connexion()
@@ -37,7 +50,7 @@ class EleveFront:
         self.radio_sexeF.place(x=600,y=150)
         self.label_date=Label(self.fen,text="Date de naissance:",font=("Times",15),fg="black",background='#51a596')
         self.label_date.place(x=305,y=200,width=250)
-        #la date de naissance de l'eleve dans un entry yyyy-mm-dd de tkcalendar
+        #la date de naissance de l'eleve dans un entry yyyy-mm-dd
         #format de la date yyyy-mm-dd
         self.tex_date=DateEntry(self.fen,font=("Arial",15),background='black',foreground='white',date_pattern='yyyy-mm-dd')
         self.tex_date.place(x=550,y=200,width=200)
@@ -57,12 +70,55 @@ class EleveFront:
         self.bouton_modifier.place(x=500,y=350,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
         self.bouton_supprimer.place(x=650,y=350,width=100)
-
+        self.afficher()
         #les variables pour la selection
-
+        
         self.selected_id=IntVar()
-        self.selected_nom=StringVar()
-        self.E=None
+        self.fen.mainloop()
+    def add(self):
+        nom=self.tex_nom.get()
+        sexe=self.radio_sexe.get()
+        date_nais=self.tex_date.get()  
+        lieu_nais=self.tex_lieu.get()
+        num_permanent=self.tex_num.get()
+        if nom and sexe and date_nais and lieu_nais and num_permanent:
+            eleve=eleve_back(num_permanent,nom,sexe,date_nais,lieu_nais)
+            eleve.save(self.connexion.get_curseur())
+            self.afficher_eleve()
+        else:
+            showwarning("Attention","Veuillez remplir tous les champs")
+    def modify(self):
+        nom=self.tex_nom.get()
+        sexe=self.radio_sexe.get()
+        date_nais=self.tex_date.get_date()
+        lieu_nais=self.tex_lieu.get()
+        num_permanent=self.tex_num.get()
+        id=self.selected_id
+
+        if nom and sexe and date_nais and lieu_nais and num_permanent:
+            eleve=eleve_back(num_permanent,nom,sexe,date_nais,lieu_nais)
+            eleve.update(self.connexion.get_curseur(),id)
+            self.afficher_eleve()
+        else:
+            showwarning("Attention","Veuillez selectionner un élève")
+    def supprimer(self):
+        id=self.selected_id
+        if id:
+            eleve=eleve_back(self.connexion.get_curseur())
+            eleve.delete_eleve(id)
+            self.afficher_eleve()
+        else:
+            showwarning("Attention","Veuillez selectionner un élève")
+    def afficher_eleve(self):
+        eleve=eleve_back("","","","","")
+        eleves=eleve.get_all(self.connexion.get_curseur())
+        self.tree.delete(*self.tree.get_children())
+        for eleve in eleves:
+            if eleve[0]%2==0:
+                self.tree.insert('','end',values=eleve,tags=('pair',))
+            else:
+                self.tree.insert('','end',values=eleve,tags=('impair',))
+    def afficher(self):
         #un treeview pour afficher les eleves
         self.tree=Treeview(self.fen, columns=('Id','Num Permanant','Nom','Sexe','Date de naissance','Lieu de naissance'), show='headings')
         self.tree.heading('Id', text='Id')
@@ -81,95 +137,26 @@ class EleveFront:
         #afficher les eleves dans le treeview les lignes paires en '#51a596' et les lignes impaires en '#091821'
         self.tree.tag_configure('pair',background='#51a596')
         self.tree.tag_configure('impair',background='#091821')
-        self.afficher()        
+        self.afficher_eleve()
+        self.tree.bind('<ButtonRelease-1>',self.selection)
     def selection(self,evt):
         #selectionner un eleve dans le treeview
         self.selected_id=self.tree.item(self.tree.selection())['values'][0]        
         self.clean_entry()
         row=self.tree.item(self.tree.selection())
-        self.tex_nom.insert(0,row['values'][1])
-        self.radio_sexe.set(row['values'][2])
-        self.tex_date.set_date(row['values'][3])
-        self.tex_lieu.insert(0,row['values'][4])
-        self.tex_num.insert(0,row['values'][5])
+        self.tex_nom.insert(0,row['values'][2])
+        self.radio_sexe.set(row['values'][3])
+        self.tex_date.set_date(row['values'][4])
+        self.tex_lieu.insert(0,row['values'][5])
+        self.tex_num.insert(0,row['values'][1])
     def clean_entry(self):
         #vider les champs
         self.tex_nom.delete(0,END)
         self.tex_lieu.delete(0,END)
         self.tex_num.delete(0,END)
 
+if __name__=="__main__":
+    EleveFront()
 
-    def add(self):
-        #ajouter un eleve
-        eleve=eleve_back(self.tex_num.get(),self.tex_nom.get(),self.radio_sexe.get(),self.tex_date.get(),self.tex_lieu.get())
-        if self.tex_nom.get() !="" and self.tex_lieu.get() !="" and self.tex_num.get() !="":
-            f=Connexion()
-            if eleve.save(self.connexion.get_curseur()):
-                showinfo("Succès","Elève enrégistré")
-                self.afficher()
-            else:
-                showerror("Echec","Enrégistrement échoué")
-        else:
-            showwarning("Echec","Veuillez remplir tout les champs")
-
-
-
-
-    def ajouter(self):
-        eleve=eleve_back(self.tex_num.get(),self.tex_nom.get(),self.radio_sexe.get(),
-                         self.tex_date.get(),
-                         self.tex_lieu.get())
-
-        if self.tex_num.get() !="" and self.tex_nom.get() != "" and self.tex_lieu.get() !="":
-            f=Connexion()
-            if eleve.save(self.connexion.get_curseur()):
-                showinfo("Succès","Elève enrégistré")
-                self.afficher()
-
-            else:
-                u=9
-        else:
-            showwarning("Echec","veuillez remplir tout les champs")
-
-    def modify(self):   
-        #modifier un eleve
-        if self.E==None:
-            self.E=eleve_back(self.tex_nom.get(),chr(self.radio_sexe.get()),self.tex_date.get(),self.tex_lieu.get())
-            if self.E.update(self.connexion.get_curseur(),self.selected_id):
-                self.afficher()
-                self.E=None
-                showinfo("Succès","Modification réussie")
-            else:
-                showerror("Echec","Modification échouée")
-        else:
-            showwarning("Echec","Veuillez vider le formulaire")
-    def supprimer(self):
-        #supprimer un eleve
-        if self.E==None:
-            self.E=eleve_back(self.tex_nom.get(),self.radio_sexe.get(),self.tex_date.get(),self.tex_lieu.get())
-            self.E=None
-            if self.E.delete(self.connexion.get_curseur()):
-                self.afficher()
-                showinfo("Succès","Suppression réussie")
-            else:
-                showerror("Echec","Suppression échouée")
-        else:
-            showwarning("Echec","Veuillez vider le formulaire")
-    def afficher(self):
-        #afficher les eleves dans le treeview
-        self.tree.delete(*self.tree.get_children())
-        i=0
-        for row in eleve_back("e","e","e","e","e").get_all(self.connexion.get_curseur()):
-            if i%2==0:
-                self.tree.insert("", "end", values=row,tags=('pair',))
-            else:
-                self.tree.insert("", "end", values=row,tags=('impair',))
-            i+=1
-        self.tree.bind("<ButtonRelease-1>",self.selection)
-    def get_entry(self):
-        self.selected_nom.set(self.tex_nom.get())
-    def fenetre(self):
-        return self.fen
     
-d=EleveFront()
-d.fenetre().mainloop()
+

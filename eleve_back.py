@@ -24,7 +24,7 @@ class eleve_back:
         lieu_nais (str): The student's place of birth.
     """
     
-    def __init__(self, num_permenant:str, nom_eleve: str, sexe: chr, date_nais: str, lieu_nais: str):
+    def __init__(self, num_permenant:str, nom_eleve: str, sexe: str, date_nais: str, lieu_nais: str):
         """
         Initializes the eleve_back object with the provided values for the student's information.
         
@@ -59,7 +59,7 @@ class eleve_back:
         """
         try:
             # Add code here to save the student's information
-            query="insert into eleve (num_permanant,nom_eleve,sexe,date_nais,lieu_nais)  values(%s,%s,%s,%s,%s)",(self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais)
+            query="insert into eleve  values(%s,%s,%s,%s,%s)",(self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais)
             print(query)
             curseur.execute(query)
             return True
@@ -73,7 +73,7 @@ class eleve_back:
         """
         try:
             # Add code here to update the student's information
-            curseur.execute("update eleve set nom_eleve=%s,sexe=%s,date_nais=%s,lieu_nais=%s ,num_permenant=%s where id_eleve=%s ",(self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais,self.num_permenant,id_eleve))
+            curseur.execute("update eleve set nom_eleve=%s,sexe=%s,date_nais=%s,lieu_nais=%s ,num_permanant=%s where id_eleve=%s ",(self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais,self.num_permenant,id_eleve))
             return True
         except Exception as e:
             # Handle any exceptions that occur during updating
