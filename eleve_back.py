@@ -59,7 +59,7 @@ class eleve_back:
         """
         try:
             # Add code here to save the student's information
-            query="insert into eleve  values(%s,%s,%s,%s,%s)",(self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais)
+            query="insert into eleve  values(%s,%s,%s,%s,%s,%s)",(2,self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais)
             print(query)
             curseur.execute(query)
             return True
@@ -67,6 +67,17 @@ class eleve_back:
             # Handle any exceptions that occur during saving
            showerror("Erreur",f"Error saving student information: {str(e)}")
            return False
+        #ajoouter un eleve
+
+    def ajouter_eleve(self,curseur):
+        
+
+        pass
+        
+            
+
+
+
     def update(self,curseur,id_eleve):
         """
         Update the student's information.

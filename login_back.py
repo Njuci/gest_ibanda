@@ -5,7 +5,7 @@ class Connexion:
         self.db = mysql.connector.connect(
             host = 'localhost',
             user = 'root',
-            password = '',
+            password = '3670njci',
             database = 'gest_ecole',
             autocommit=True
         )
