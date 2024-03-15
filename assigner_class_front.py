@@ -116,6 +116,7 @@ class Assigner_class_front:
         self.combo_tutilaire['values']=[(str(row[0])+"|"+row[1]) for row in data]
         self.combo_tutilaire.bind('<<ComboboxSelected>>',self.get_id_tutilaire)
         #remplir la combobox classe
+        
         classe=Classe("")
         data=classe.get_all(self.connexion.get_curseur())
         self.combo_class['values']=[(str(data[0])+"|"+data[1]) for data in data]
