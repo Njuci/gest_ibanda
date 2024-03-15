@@ -16,12 +16,12 @@ from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
 from classe_backend import Classe
 from tkinter.ttk import Treeview
-from login_back import Connexion
-from side_bar import SideBar
+#from side_bar import SideBar
+import side_bar
 
 class ClasseFront:
-    def __init__(self):
-        self.connexion=Connexion()
+    def __init__(self,connection):
+        self.connexion=connection
     
         self.fen=Tk()
     
@@ -29,7 +29,7 @@ class ClasseFront:
         self.fen.geometry("800x600+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
-        self.side_bar=SideBar(self.fen,self.connexion.get_curseur())
+        self.side_bar=side_bar.SideBar(self.fen,self.connexion)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Classe",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
@@ -106,5 +106,3 @@ class ClasseFront:
         self.selected_nom.set(self.tex_nom.get())
     def fenetre(self):
         return self.fen
-d=ClasseFront()
-d.fenetre().mainloop()

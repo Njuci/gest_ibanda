@@ -17,6 +17,7 @@ class User_back:
         except Exception as e:
             showerror("Erreur",str(e)) 
             return False
+        
     def get_username(self): 
         return self.username
     def get_mdp(self):
@@ -52,3 +53,10 @@ class User_back:
             showerror("Erreur",str(e))
             return False
     
+    def user_type(self,curseur):
+        try:
+            curseur.execute("select user_type from utilisateur where username=%s and pass_word=%s",(self.username,self.mdp))
+            return curseur.fetchall()
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False

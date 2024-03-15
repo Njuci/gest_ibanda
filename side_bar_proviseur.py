@@ -21,7 +21,7 @@ class Sidebar_proviseur(Frame):
         self.titre.place(x=30, y=20)
         # bouton pour la gestion des classes
         self.bouton_classe = Button(self.MenuContainer, text="Classes", font="Arial 12")
-        self.bouton_classe.place(x=30, y=100)
+        self.bouton_classe.place(x=30, y=100,width=190,height=40)
         # bouton pour la gestion des utilisateurs
         self.bouton_utilisateur = Button(self.MenuContainer, text="Utilisateurs", font="Arial 12")
         self.bouton_utilisateur.place(x=30, y=150 ,width=190, height=40)

@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
 from login_back import Connexion
 from user_back import User_back
+from anne_scolaire_front import anne_scolaire
 class Login_front:
     def __init__(self):
         self.fen=Tk()
@@ -37,9 +38,20 @@ class Login_front:
             if self.verify_input():
                 user=User_back(self.tex_username.get(),self.tex_mdp.get(),"defaut")
                 #Verification de l'existence de l'utilisateur
-                if user.verifier(con.curseur):
-                    print("user")
-                    showinfo("succès","vous etes connectées")
+                if user.verifier(con.curseur):                    
+                    
+                    type=user.user_type(con.curseur)
+                    if type !=False:
+                        showinfo("succès","vous etes connectées")
+                       
+                        if type[0][0]=="secretaire":
+                            self.fen.destroy()
+                            anne=anne_scolaire(con)
+                            anne.fenetre().mainloop()
+
+
+
+                    
                 else:
                     print("cursor ec")
                     
@@ -50,6 +62,3 @@ class Login_front:
         return self.fen
     
 
-
-d=Login_front()
-d.fenetre().mainloop()

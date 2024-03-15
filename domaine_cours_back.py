@@ -35,9 +35,9 @@ class Domaine_cours:
         except Exception as e:
             showerror("Erreur",str(e))
             return False
-    def delete(self,curseur):
+    def delete(self,curseur,id):
         try:
-            curseur.execute("delete from domaine_cours where nom_dom=%s",(self.nom_dom,))
+            curseur.execute("delete from domaine_cours where id_dom=%s",(id,))
             return True
         except Exception as e:
             showerror("Erreur",str(e))

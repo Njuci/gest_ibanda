@@ -59,7 +59,7 @@ class utilisateur_front:
         self.tree.column('id',width=50)
         self.tree.column('username',width=100)
         self.tree.column('password',width=100)
-        self.tree.column('role',width=50)
+        self.tree.column('role',width=100)
         self.afficher()
 
 

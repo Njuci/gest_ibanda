@@ -39,9 +39,9 @@ class Domaine_cours_front:
         self.tree.heading('Num',text='Numéro')
         self.tree.heading('id_domaine',text='Id')
         self.tree.heading('Nom',text='Nom')
-        self.tree.column('Num',width=50)
-        self.tree.column('id_domaine',width=50)
-        self.tree.column('Nom',width=100)
+        self.tree.column('Num',width=30)
+        self.tree.column('id_domaine',width=30)
+        self.tree.column('Nom',width=140)
         self.run()
     def afficher(self):
         domaine=Domaine_cours("")
@@ -54,18 +54,21 @@ class Domaine_cours_front:
         self.tree.bind("<Button-1>",self.selection)
         self.tree.place(x=300,y=200)
 
-    def selection(self,event):
+    def selection(self,event):        
         item=self.tree.selection()[0]
         self.id_domaine.set(self.tree.item(item,"values")[1])
         self.entry_nom.delete(0,END)
         self.entry_nom.insert(0,self.tree.item(item,"values")[2])
 
 
-
+    def clear_entry(self):
+        self.entry_nom.delete(0,END)
+        
     def ajouter(self):
         domaine=Domaine_cours(self.entry_nom.get())
-        if domaine.ajouter(self.connexion.get_curseur()):
+        if domaine.save(self.connexion.get_curseur()):
             showinfo("Succès","Domaine ajouté avec succès")
+            self.clear_entry()
             self.run()
         else:
             showerror("Erreur","Erreur lors de l'ajout du domaine")
@@ -73,8 +76,9 @@ class Domaine_cours_front:
 
     def modifier(self):
         domaine=Domaine_cours(self.entry_nom.get())
-        if domaine.update(self.id_domaine.get(),self.connexion.get_curseur()):
+        if domaine.update(self.connexion.get_curseur(),self.id_domaine.get()):
             showinfo("Succès","Domaine modifié avec succès")
+            self.clear_entry()
             self.run()
         else:
             showerror("Erreur","Erreur lors de la modification du domaine")
@@ -82,7 +86,7 @@ class Domaine_cours_front:
     def supprimer(self):
 
         domaine=Domaine_cours(self.entry_nom.get())
-        if domaine.delete(self.id_domaine.get(),self.connexion.get_curseur()):
+        if domaine.delete(self.connexion.get_curseur(),self.id_domaine.get()):
             showinfo("Succès","Domaine supprimé avec succès")
             self.run()
         else:
