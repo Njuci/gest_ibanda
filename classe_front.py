@@ -17,6 +17,11 @@ from tkinter.messagebox import showerror,showinfo,showwarning
 from classe_backend import Classe
 from tkinter.ttk import Treeview
 #from side_bar import SideBar
+""" 
+pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
+
+"""
+
 import side_bar
 
 class ClasseFront:

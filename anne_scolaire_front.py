@@ -19,6 +19,10 @@ from tkinter.messagebox import showerror,showinfo,showwarning
 from anne_scolaire_back import AnneScolaire
 from tkinter.ttk import Treeview
 #from side_bar import SideBar   
+""" 
+pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
+
+"""
 import side_bar 
 class anne_scolaire:
     def __init__(self,connection):

@@ -11,8 +11,14 @@ from tkinter import *
 #from classe_front import ClasseFront
 #from anne_scolaire_front import anne_scolaire
 #from elelve import EleveFront
+""" 
+pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
+
+"""
+import classe_front
 import login_front
 import anne_scolaire_front
+import elelve
 class SideBar:
     def __init__(self, fen,cursor=None):
         self.fen = fen
@@ -28,22 +34,34 @@ class SideBar:
         self.gest_clsse = Button(self.MenuContainer, text='Classe', command=self.save)
         self.gest_clsse.place(x=20, y=140, width=190, height=40)
 
-        self.gest_anne_sc = Button(self.MenuContainer, text='Anne scolaire', command=self.save)
+        self.gest_anne_sc = Button(self.MenuContainer, text='Anne scolaire', command=self.anne_scol)
         self.gest_anne_sc.place(x=20, y=200, width=190, height=40)
 
-        self.gest_Clients = Button(self.MenuContainer, text='Eleve', command=self.save)
+        self.gest_Clients = Button(self.MenuContainer, text='Eleve', command=self.eleve_call)
         self.gest_Clients.place(x=20, y=260, width=190, height=40)
 
         self.gest_Clients = Button(self.MenuContainer, text='Inscription', command=self.save)
         self.gest_Clients.place(x=20, y=320, width=190, height=40)
     def place(self, x, y):
         self.MenuContainer.place(x=x, y=y)
-    def login(self):
-         self.fen.destroy()
+    def login(self):        
          login_form= login_front.Login_front()
          login_form.fenetre().mainloop()
-         
-    
+         self.fen.destroy()
+    def anne_scol(self):
+         self.fen.destroy()         
+         anne_scola=anne_scolaire_front.anne_scolaire(self.curseur)
+         anne_scola.fenetre().mainloop()
+
+    def classe_scol(self):
+         self.fen.destroy()
+         class_scol=classe_front.ClasseFront(self.curseur)
+         class_scol.fenetre().mainloop()
+    def eleve_call(self):
+         self.fen.destroy()
+         ele_ve=elelve.EleveFront(self.curseur)
+         ele_ve.fenetre().mainloop()
+                    
     def save(self):
             pass
     

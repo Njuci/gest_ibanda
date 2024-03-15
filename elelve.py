@@ -18,20 +18,21 @@ from tkcalendar import DateEntry
 from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
 from eleve_back import eleve_back
-from login_back import Connexion
-from side_bar import SideBar
+#from login_back import Connexion
+#from side_bar import SideBar
 from tkinter.ttk import Treeview
+import side_bar
 
 
 class EleveFront:
-    def __init__(self):
-        self.connexion=Connexion()
+    def __init__(self,connection):
+        self.connexion=connection
         self.fen=Tk()
         self.fen.title("Eleve")
         self.fen.geometry("800x700+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
-        self.side_bar=SideBar(self.fen,self.connexion.get_curseur())
+        self.side_bar=side_bar.SideBar(self.fen,self.connexion.get_curseur())
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Eleve",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
@@ -74,7 +75,7 @@ class EleveFront:
         #les variables pour la selection
         
         self.selected_id=IntVar()
-        self.fen.mainloop()
+       
     def add(self):
         nom=self.tex_nom.get()
         sexe=self.radio_sexe.get()
@@ -154,9 +155,6 @@ class EleveFront:
         self.tex_nom.delete(0,END)
         self.tex_lieu.delete(0,END)
         self.tex_num.delete(0,END)
-
-if __name__=="__main__":
-    EleveFront()
-
-    
+    def fenetre(self):
+        return self.fen
 
