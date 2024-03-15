@@ -17,29 +17,29 @@ class Sidebar_proviseur(Frame):
         self.curseur = cursor
         self.MenuContainer = Frame(self.fen, height=800, width=230, bg='#51a596')
         self.MenuContainer.place(x=0, y=0)
-        self.titre = Label(self.MenuContainer, text="GEST IBANDA", font="Arial 15 bold", bg='#51a596', fg='white')
+        self.titre = Label(self.MenuContainer, text="GEST IBANDA", font="Arial 15 bold", bg='#51a596', fg='black')
         self.titre.place(x=30, y=20)
         # bouton pour la gestion des classes
-        self.bouton_classe = Button(self.MenuContainer, text="Classes", font="Arial 12", bg='#51a596', fg='white', relief='flat')
+        self.bouton_classe = Button(self.MenuContainer, text="Classes", font="Arial 12")
         self.bouton_classe.place(x=30, y=100)
         # bouton pour la gestion des utilisateurs
-        self.bouton_utilisateur = Button(self.MenuContainer, text="Utilisateurs", font="Arial 12", bg='#51a596', fg='white', relief='flat')
-        self.bouton_utilisateur.place(x=30, y=150)
+        self.bouton_utilisateur = Button(self.MenuContainer, text="Utilisateurs", font="Arial 12")
+        self.bouton_utilisateur.place(x=30, y=150 ,width=190, height=40)
         # bouton pour la gestion des matieres
-        self.bouton_matiere = Button(self.MenuContainer, text="Matieres", font="Arial 12", bg='#51a596', fg='white', relief='flat')
-        self.bouton_matiere.place(x=30, y=200)
+        self.bouton_matiere = Button(self.MenuContainer, text="Matieres", font="Arial 12")
+        self.bouton_matiere.place(x=30, y=200 ,width=190, height=40)
         # bouton pour la gestion des domaines de cours
-        self.bouton_domaine = Button(self.MenuContainer, text="Domaines", font="Arial 12", bg='#51a596', fg='white', relief='flat')
-        self.bouton_domaine.place(x=30, y=250)
+        self.bouton_domaine = Button(self.MenuContainer, text="Domaines", font="Arial 12")
+        self.bouton_domaine.place(x=30, y=250 ,width=190, height=40)
         # bouton pour la gestion des rapports de notes
-        self.bouton_rapport = Button(self.MenuContainer, text="Rapports", font="Arial 12", bg='#51a596', fg='white', relief='flat')
-        self.bouton_rapport.place(x=30, y=300)
+        self.bouton_rapport = Button(self.MenuContainer, text="Rapports", font="Arial 12")
+        self.bouton_rapport.place(x=30, y=300, width=190, height=40)
         # bouton pour la gestion des anne scolaire
-        self.bouton_annee = Button(self.MenuContainer, text="Annees", font="Arial 12", bg='#51a596', fg='white', relief='flat')
-        self.bouton_annee.place(x=30, y=350)
+        self.bouton_annee = Button(self.MenuContainer, text="Annees", font="Arial 12")
+        self.bouton_annee.place(x=30, y=350, width=190, height=40)
         # bouton pour la gestion des palmarea
-        self.bouton_palmares = Button(self.MenuContainer, text="Palmares", font="Arial 12", bg='#51a596', fg='white', relief='flat')
-        self.bouton_palmares.place(x=30, y=400)
+        self.bouton_palmares = Button(self.MenuContainer, text="Palmares", font="Arial 12")
+        self.bouton_palmares.place(x=30, y=400 ,width=190, height=40)
 
 
         

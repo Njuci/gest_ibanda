@@ -39,7 +39,7 @@ class User_back:
             return False
     def update(self,curseur,username):
         try:
-            curseur.execute("update utilisateur set username=%s,pass_word=%s,type=%s where username=%s",(self.username,self.mdp,self.type,username))
+            curseur.execute("update utilisateur set username=%s,pass_word=%s,user_type=%s where username=%s",(self.username,self.mdp,self.type,username))
             return True
         except Exception as e:
             showerror("Erreur",str(e))

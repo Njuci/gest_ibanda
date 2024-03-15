@@ -22,26 +22,26 @@ class utilisateur_front:
         self.label_titre.place(x=300,y=0,width=500,height=80)
         #label pour le username
         self.label_username=Label(self.fen,text="Username",font=("Sans Serif",12),fg='white',background='#51a596')
-        self.label_username.place(x=200,y=100)
+        self.label_username.place(x=300,y=100)
         #champ pour le username
         self.username=StringVar()
         self.entry_username=Entry(self.fen,textvariable=self.username,font=("Sans Serif",12),fg='black',background='white')
-        self.entry_username.place(x=300,y=100)
+        self.entry_username.place(x=400,y=100)
         #label pour le password
         self.label_password=Label(self.fen,text="Password",font=("Sans Serif",12),fg='white',background='#51a596')
-        self.label_password.place(x=200,y=150)
+        self.label_password.place(x=300,y=150)
         #champ pour le password
         self.password=StringVar()
         self.entry_password=Entry(self.fen,textvariable=self.password,font=("Sans Serif",12),fg='black',background='white')
-        self.entry_password.place(x=300,y=150)
+        self.entry_password.place(x=400,y=150)
         #label pour le role
         self.label_role=Label(self.fen,text="Role",font=("Sans Serif",12),fg='white',background='#51a596')
-        self.label_role.place(x=200,y=200)
+        self.label_role.place(x=300,y=200)
         #combobox pour le role
         self.role=StringVar()
         self.combo_role=ttk.Combobox(self.fen,textvariable=self.role,font=("Sans Serif",12))
         self.combo_role['values']=("proviseur","titulaire","secretaire")
-        self.combo_role.place(x=300,y=200)
+        self.combo_role.place(x=400,y=200)
         self.bouton_ajouter=Button(self.fen,text='Ajouter', background='#FF4500',font=("Times",16),fg='white',command=self.ajouter)
         self.bouton_ajouter.place(x=350,y=250,width=100)
         self.bouton_modifier=Button(self.fen,text='Modifier', background='#FF4500',font=("Times",16),fg='white',command=self.modifier)
@@ -65,6 +65,8 @@ class utilisateur_front:
 
         
         self.fen.mainloop()
+    def get_old_username(self):
+        return self.selected[2]
     def ajouter(self):
         username=self.username.get()
         password=self.password.get()
@@ -85,7 +87,7 @@ class utilisateur_front:
             user=(cpt,user[0],user[1],user[2],user[3])
             self.tree.insert('','end',values=user)
         self.tree.bind('<Button-1>',self.get_selected)
-        self.tree.place(x=200,y=300)
+        self.tree.place(x=300,y=300)
     def supprimer(self):
         username=self.username.get()
         user=User_back(username,"","")
@@ -110,7 +112,7 @@ class utilisateur_front:
         password=self.password.get()
         role=self.role.get()
         user=User_back(username,password,role)
-        if user.update(self.connexion.get_curseur()):
+        if user.update(self.connexion.get_curseur(),self.get_old_username()):
             showinfo("Modification","Utilisateur modifié avec succès")
             self.afficher()
         else:
