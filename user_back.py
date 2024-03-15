@@ -23,4 +23,32 @@ class User_back:
         return self.mdp
     def get_type(self):
         return self.type
+    def get_all(self,curseur):
+        try:
+            curseur.execute("select * from utilisateur")
+            return curseur.fetchall()
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False
+    def save(self,curseur):
+        try:
+            curseur.execute("insert into utilisateur(username,pass_word,user_type) values(%s,%s,%s)",(self.username,self.mdp,self.type))
+            return True
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False
+    def update(self,curseur,username):
+        try:
+            curseur.execute("update utilisateur set username=%s,pass_word=%s,type=%s where username=%s",(self.username,self.mdp,self.type,username))
+            return True
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False
+    def delete(self,curseur,username):
+        try:
+            curseur.execute("delete from utilisateur where username=%s",(username,))
+            return True
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False
     

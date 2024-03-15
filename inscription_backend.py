@@ -25,7 +25,8 @@ class Inscription_back:
    
     def get_all(self,curseur):
         try:
-            curseur.execute("select * from inscription")
+            curseur.execute("select inscription.id_eleve, eleve.nom_eleve,inscription.id_anne_scol,inscription.id_class ,inscription.id_inscription from eleve"+
+                            " join inscription on inscription.id_eleve=eleve.id_eleve")
             return curseur.fetchall()
         except Exception as e:
             print(str(e))

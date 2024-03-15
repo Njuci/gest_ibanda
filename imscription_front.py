@@ -71,20 +71,20 @@ class InscriptionFront:
         #affichage des inscriptions ajouter dans un treeview le nom et l'id de l'eleve, le nom et l'id de la classe et l'annee scolaire
 
 
-        self.tree=Treeview(self.fen, columns=('Id','Id_eleve','Eleve','Classe','Annee scolaire','Id Inscription'), show='headings')
+        self.tree=Treeview(self.fen, columns=('Id','Id_el','Eleve','Classe','Annee scolaire','Id Inscr'), show='headings')
         self.tree.heading('Id', text='Id')
-        self.tree.heading('Id_eleve', text='Id_eleve')
+        self.tree.heading('Id_el', text='Id_el')
         self.tree.heading('Eleve', text='Eleve')
         self.tree.heading('Classe', text='Classe')
         self.tree.heading('Annee scolaire', text='Annee scolaire')
-        self.tree.heading('Id Inscription', text='Id Inscription')
+        self.tree.heading('Id Inscr', text='Id Inscr')
 
         self.tree.column('Id',width=20)
-        self.tree.column('Id_eleve',width=40)
+        self.tree.column('Id_el',width=40)
         self.tree.column('Eleve',width=100)
         self.tree.column('Classe',width=100)
         self.tree.column('Annee scolaire',width=100)
-        self.tree.column('Id Inscription',width=100)
+        self.tree.column('Id Inscr',width=100)
         self.tree.place(x=300,y=350,height=200)
         #button pour imprimer les inscriptions
         self.bouton_imprimer=Button(self.fen,text='Imprimer', background='#FF4500',font=("Times",16),fg='white',command=self.imprimer)
@@ -97,8 +97,14 @@ class InscriptionFront:
     def afficher(self):
         self.tree.delete(*self.tree.get_children())
         self.E=Inscription_back(0,0,0,0)
-        for row in self.E.get_all(self.connexion.get_curseur()):
-            self.tree.insert("",END,values=row)
+        #compyer le nombre d'inscriptions
+        inscription=self.E.get_all(self.connexion.get_curseur())
+        #remplir le treeview avec les inscriptions id et nom de l'eleve, id et nom de la classe et l'annee scolaire
+        cpt=0
+        #afficher les inscriptions
+        for row in inscription:
+            cpt+=1
+            self.tree.insert("",END,values=(cpt,row[0],row[1],row[2],row[3],row[4]))
     def selection(self,evt):
         self.selected_id=self.tree.item(self.tree.selection())['values'][0]
         self.clean_entry()
@@ -111,15 +117,12 @@ class InscriptionFront:
         self.combo_classe.set('')
         self.combo_anne.set('')
     def ajouter(self):
-        if self.E==None:
-            self.E=Inscription_back(0,self.combo_eleve.get(),self.combo_classe.get(),self.combo_anne.get())
-            if self.E.save(self.connexion.get_curseur()):
-                self.afficher()
-                showinfo("Succès","Ajout réussi")
-            else:
-                showerror("Echec","Ajout échoué")
+        self.E=Inscription_back(self.id_inscription.get(),self.combo_eleve.get().split("|")[0],self.combo_anne.get().split("|")[0],self.combo_classe.get().split("|")[0])
+        if self.E.save(self.connexion.get_curseur()):
+            self.afficher()
+            showinfo("Succès","Ajout réussi")
         else:
-            showwarning("Echec","Veuillez vider le formulaire")
+            showerror("Echec","Ajout échoué")
 
     def modify(self):
         if self.E==None:
@@ -153,15 +156,15 @@ class InscriptionFront:
         eleve=eleve_back("","","","","")
         eleves=eleve.get_all(self.connexion.get_curseur())
         for eleve in eleves:
-            self.combo_eleve['values']=(eleve[0],eleve[1])
+            self.combo_eleve['values']=(str(eleve[0])+"|"+eleve[1])
         classe=Classe("")
         classes=classe.get_all(self.connexion.get_curseur())
         for classe in classes:
-            self.combo_classe['values']=(classe[0],classe[1])
+            self.combo_classe['values']=(str(classe[0])+"|"+classe[1])
         anne=AnneScolaire("",True)
         annees=anne.get_all(self.connexion.get_curseur())
         for anne in annees:
-            self.combo_anne['values']=(anne[0],anne[1])
+            self.combo_anne['values']=(str(anne[0])+"|" +anne[1])
         self.combo_eleve.bind("<<ComboboxSelected>>",self.get_id_eleve)
         self.combo_classe.bind("<<ComboboxSelected>>",self.get_id_classe)
         self.combo_anne.bind("<<ComboboxSelected>>",self.get_id_anne)
