@@ -42,7 +42,21 @@ class Domaine_cours_front:
         self.tree.column('Num',width=30)
         self.tree.column('id_domaine',width=30)
         self.tree.column('Nom',width=140)
+        #scrollbar
+        self.scrollbar=Scrollbar(self.fen,orient=VERTICAL,command=self.tree.yview)
+        self.scrollbar.place(x=505,y=200,height=200)
+        self.tree.config(yscrollcommand=self.scrollbar.set)
+        
+        
+        #impression  des domaine_cours
+        self.bouton_imp=Button(self.fen,text='Imprimer', background='#FF4500',font=("Times",16),fg='white',command=self.imprimer)
+        self.bouton_imp.place(x=650,y=400,width=100)
+        
         self.run()
+
+    def imprimer(self):
+        pass
+        
     def afficher(self):
         domaine=Domaine_cours("")
         data=domaine.get_all(self.connexion.get_curseur())
@@ -52,7 +66,7 @@ class Domaine_cours_front:
             self.tree.insert('','end',values=(i+1,data[i][0],data[i][1]))
         #selection d'un element dans le treeview
         self.tree.bind("<Button-1>",self.selection)
-        self.tree.place(x=300,y=200)
+        self.tree.place(x=300,y=200,height=200)
 
     def selection(self,event):        
         item=self.tree.selection()[0]

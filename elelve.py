@@ -20,19 +20,21 @@ from tkinter.messagebox import showerror,showinfo,showwarning
 from eleve_back import eleve_back
 #from login_back import Connexion
 #from side_bar import SideBar
-from tkinter.ttk import Treeview
+from tkinter.ttk import Treeview,Combobox
 import side_bar
-
+import report
 
 class EleveFront:
     def __init__(self,connection):
         self.connexion=connection
         self.fen=Tk()
         self.fen.title("Eleve")
-        self.fen.geometry("800x700+150+0")
+        self.fen.geometry("900x900+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
-        self.side_bar=side_bar.SideBar(self.fen,self.connexion.get_curseur())
+        self.side_bar=side_bar.SideBar(self.fen,self.connexion)
+        self.side_bar.MenuContainer.config(width=230,height=400)
+        
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Eleve",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
@@ -71,11 +73,22 @@ class EleveFront:
         self.bouton_modifier.place(x=500,y=350,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
         self.bouton_supprimer.place(x=650,y=350,width=100)
-        self.afficher()
+        self.afficher() 
         #les variables pour la selection
-        
+        self.combobox_date=Combobox(self.fen,font=("Arial",15))
+        self.combobox_date.place(x=100,y=420,width=100)
+        self.combobox_date['values']=('Tous','Aujourd\'hui','Cette semaine','Ce mois','Cette année')
+        self.combobox_date.bind('<<ComboboxSelected>>',self.afficher_eleve)
+        #bouton pour imprimer
+        self.bouton_imp=Button(self.fen,text='Imprimer', background='#FF4500',font=("Times",16),fg='white',command=self.imprimer)
+        self.bouton_imp.place(x=100,y=440,width=100)
+
         self.selected_id=IntVar()
-       
+    def imprimer(self):
+        report.generate_pdf(self.tree,"liste des eleves.pdf",['Id','Num Permanant','Nom','Sexe','Date de naissance','Lieu de naissance','Date Enre'],"Listes des elves",
+                            [100,20])
+    
+
     def add(self):
         nom=self.tex_nom.get()
         sexe=self.radio_sexe.get()
@@ -121,20 +134,28 @@ class EleveFront:
                 self.tree.insert('','end',values=eleve,tags=('impair',))
     def afficher(self):
         #un treeview pour afficher les eleves
-        self.tree=Treeview(self.fen, columns=('Id','Num Permanant','Nom','Sexe','Date de naissance','Lieu de naissance'), show='headings')
-        self.tree.heading('Id', text='Id')
-        self.tree.heading('Num Permanant', text='Num Permanant')
+        self.tree=Treeview(self.fen, columns=('Id','Num Permanant','Nom','Sexe','Date de naissance','Lieu de naissance','Date Enre'), show='headings')
+        self.tree.heading('Id', text='Id',)
+        self.tree.heading('Num Permanant', text='NumP')
         self.tree.heading('Nom', text='Nom')
         self.tree.heading('Sexe', text='Sexe')
         self.tree.heading('Date de naissance', text='Date de naissance')
         self.tree.heading('Lieu de naissance', text='Lieu de naissance')
-        self.tree.column('Id',width=20)
-        self.tree.column('Num Permanant',width=100)
+        self.tree.heading('Date Enre',text="Date Enregistrement")
+        self.tree.column('Id',width=10)
+        self.tree.column('Num Permanant',width=40)
         self.tree.column('Nom',width=150)
         self.tree.column('Sexe',width=50)
-        self.tree.column('Date de naissance',width=50)
+        self.tree.column('Date de naissance',width=90)
         self.tree.column('Lieu de naissance',width=100)
-        self.tree.place(x=300,y=420,height=200)
+        self.tree.column('Date Enre',width=130)
+        #scrollbar
+        self.scrollbar=Scrollbar(self.fen,orient=VERTICAL,command=self.tree.yview)
+        self.scrollbar.place(x=880,y=400,height=200)
+        self.tree.config(yscrollcommand=self.scrollbar.set)
+
+    
+        self.tree.place(x=300,y=400,height=200)
         #afficher les eleves dans le treeview les lignes paires en '#51a596' et les lignes impaires en '#091821'
         self.tree.tag_configure('pair',background='#51a596')
         self.tree.tag_configure('impair',background='#091821')

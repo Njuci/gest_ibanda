@@ -19,6 +19,7 @@ import classe_front
 import login_front
 import anne_scolaire_front
 import elelve
+import imscription_front 
 class SideBar:
     def __init__(self, fen,cursor=None):
         self.fen = fen
@@ -40,14 +41,15 @@ class SideBar:
         self.gest_Clients = Button(self.MenuContainer, text='Eleve', command=self.eleve_call)
         self.gest_Clients.place(x=20, y=260, width=190, height=40)
 
-        self.gest_Clients = Button(self.MenuContainer, text='Inscription', command=self.save)
+        self.gest_Clients = Button(self.MenuContainer, text='Inscription', command=self.inscription)
         self.gest_Clients.place(x=20, y=320, width=190, height=40)
     def place(self, x, y):
         self.MenuContainer.place(x=x, y=y)
-    def login(self):        
+    def login(self):
+         self.fen.destroy()
          login_form= login_front.Login_front()
          login_form.fenetre().mainloop()
-         self.fen.destroy()
+         
     def anne_scol(self):
          self.fen.destroy()         
          anne_scola=anne_scolaire_front.anne_scolaire(self.curseur)
@@ -61,7 +63,11 @@ class SideBar:
          self.fen.destroy()
          ele_ve=elelve.EleveFront(self.curseur)
          ele_ve.fenetre().mainloop()
-                    
+    def inscription(self):
+         self.fen.destroy()
+         inscription_r=imscription_front.InscriptionFront(self.curseur)
+         inscription_r.fenetre().mainloop()
+          
     def save(self):
             pass
     
