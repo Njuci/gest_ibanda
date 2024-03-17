@@ -31,6 +31,16 @@ class User_back:
         except Exception as e:
             showerror("Erreur",str(e))
             return False
+    def get_all_tutilaire(self,curseur):
+        try:
+            curseur.execute("select * from utilisateur where user_type='tutilaire'")
+            return curseur.fetchall()
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False
+
+    
+    
     def save(self,curseur):
         try:
             curseur.execute("insert into utilisateur(username,pass_word,user_type) values(%s,%s,%s)",(self.username,self.mdp,self.type))

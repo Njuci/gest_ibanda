@@ -63,7 +63,8 @@ class Assigner_class_front:
         self.tree.column('id_anne_scolaire',width=100)
         self.run()
     def ajouter(self):
-        assign=Assigner_class_back(self.id_tutilaire.get(),self.id_class.get(),self.id_anne_scolaire.get())
+        
+        assign=Assigner_class_back(self.combo_tutilaire.get().split('|')[0],self.combo_class.get().split('|')[0],self.combo_anne_scolaire.get().split('|')[0])
         if assign.save(self.connexion.get_curseur()):
             showinfo("Succès","Assignation reussie")
             self.afficher()
@@ -71,7 +72,8 @@ class Assigner_class_front:
             showerror("Erreur","Echec de l'assignation")
 
     def modifier(self):
-        assign=Assigner_class_back(self.id_tutilaire.get(),self.id_class.get(),self.id_anne_scolaire.get())
+        
+        assign=Assigner_class_back(self.combo_tutilaire.get().split('|')[0],self.combo_class.get().split('|')[0],self.combo_anne_scolaire.get().split('|')[0])
         if assign.update(self.connexion.get_curseur(),self.id_tutilaire.get(),self.id_class.get(),self.id_anne_scolaire.get()):
             showinfo("Succès","Modification reussie")
             self.afficher()
@@ -80,8 +82,9 @@ class Assigner_class_front:
     
     def supprimer(self):
         assign=Assigner_class_back(self.id_tutilaire.get(),self.id_class.get(),self.id_anne_scolaire.get())
-        if assign.delete(self.connexion.get_curseur(),self.id_tutilaire.get(),self.id_class.get(),self.id_anne_scolaire.get()):
+        if assign.delete(self.connexion.get_curseur(),self.combo_tutilaire.get().split('|')[0],self.combo_class.get().split('|')[0],self.combo_anne_scolaire.get().split('|')[0]):
             showinfo("Succès","Suppression reussie")
+            self.remplir_combo()
             self.afficher()
         else:
             showerror("Erreur","Echec de la suppression")
@@ -94,25 +97,30 @@ class Assigner_class_front:
     def afficher(self):
         assign=Assigner_class_back(0,0,0)
         data=assign.get_all(self.connexion.get_curseur())
+        
         self.tree.delete(*self.tree.get_children())
         cpt=0
 
         for row in data:
             cpt+=1
-            self.tree.insert('','end',values=(cpt,row[0],row[1],row[2],row[3]))
-        self.tree.bind('<Button-1>',self.get_selection)
+            self.tree.insert('','end',values=(cpt,row[0],row[1],str(row[2])+"|"+row[3],str(row[4])+"|"+row[5]))
+        self.tree.bind('<Double-Button-1>',self.get_selection)
+        
     def get_selection(self,event):
-
+        print(self.tree.selection())
         self.selected=self.tree.item(self.tree.selection()[0])['values']
-        #renplir les combobox avec les valeurs selectionnees
-        self.combo_tutilaire.set(self.selected[2])
+        #renplir les combobox avec les valeurs 
+        print(self.selected)
+        self.combo_tutilaire.set(str(self.selected[1])+"|"+self.selected[2])
         self.combo_class.set(self.selected[3])
         self.combo_anne_scolaire.set(self.selected[4])
+        
+        
     #pour remplir les combobox
     def remplir_combo(self):
         #remplir la combobox titulaire
         user=User_back("","","")
-        data=user.get_all(self.connexion.get_curseur())
+        data=user.get_all_tutilaire(self.connexion.get_curseur())
         self.combo_tutilaire['values']=[(str(row[0])+"|"+row[1]) for row in data]
         self.combo_tutilaire.bind('<<ComboboxSelected>>',self.get_id_tutilaire)
         #remplir la combobox classe
@@ -126,17 +134,19 @@ class Assigner_class_front:
         data=anne.get_all(self.connexion.get_curseur())
         self.combo_anne_scolaire['values']=[(str(data[0])+"|"+data[1]) for data in data]
         self.combo_anne_scolaire.bind('<<ComboboxSelected>>',self.get_id_anne_scolaire)
+        #.get().split('|')[0]
     def get_id_tutilaire(self,event):
-        self.id_tutilaire.set(self.combo_tutilaire.get())
+        self.id_tutilaire.set(self.combo_tutilaire.get().split('|')[0])
     def get_id_class(self,event):
-        self.id_class.set(self.combo_class.get())
+        self.id_class.set(self.combo_class.get().split('|')[0])
     def get_id_anne_scolaire(self,event):
-        self.id_anne_scolaire.set(self.combo_anne_scolaire.get())
+        self.id_anne_scolaire.set(self.combo_anne_scolaire.get().split('|')[0])
     def run(self):
         self.remplir_combo()
         self.afficher()
         self.tree.place(x=300,y=300)
-        self.fen.mainloop()
+    def fenetre(self):
+        return self.fen
 if __name__ == '__main__':
     assign=Assigner_class_front()
-        
+    assign.fenetre().mainloop()

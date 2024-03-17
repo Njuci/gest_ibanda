@@ -40,7 +40,7 @@ class utilisateur_front:
         #combobox pour le role
         self.role=StringVar()
         self.combo_role=ttk.Combobox(self.fen,textvariable=self.role,font=("Sans Serif",12))
-        self.combo_role['values']=("proviseur","titulaire","secretaire")
+        self.combo_role['values']=("proviseur","tutilaire","secretaire")
         self.combo_role.place(x=400,y=200)
         self.bouton_ajouter=Button(self.fen,text='Ajouter', background='#FF4500',font=("Times",16),fg='white',command=self.ajouter)
         self.bouton_ajouter.place(x=350,y=250,width=100)
@@ -86,7 +86,7 @@ class utilisateur_front:
             cpt+=1
             user=(cpt,user[0],user[1],user[2],user[3])
             self.tree.insert('','end',values=user)
-        self.tree.bind('<Button-1>',self.get_selected)
+        self.tree.bind('<Double-Button-1>',self.get_selected)
         self.tree.place(x=300,y=300)
     def supprimer(self):
         username=self.username.get()

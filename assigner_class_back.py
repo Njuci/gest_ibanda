@@ -21,7 +21,7 @@ class Assigner_class_back:
         self.id_anne_scolaire = id_anne_scolaire
     def get_all(self,curseur):
         try:
-            curseur.execute("select * from assigner_class")
+            curseur.execute("select A.id_tutilaire,B.username,A.id_class,C.nom,A.id_anne_scolaire,D.nom from assigner_class A join utilisateur B on A.id_tutilaire = B.id_user join  classe C on A.id_class = C.id_class join anne_scolaire D on A.id_anne_scolaire = D.id")
             return curseur.fetchall()
         except Exception as e:
           
@@ -37,7 +37,7 @@ class Assigner_class_back:
             return False
     def update(self,curseur,id_tutilaire,id_class,id_anne_scolaire):
         try:
-            curseur.execute("update assigner_class set id_tutilaire=%s,id_class=%s,id_anne_scolaire=%s where id_tutilaire=%s and id_class=%s and id_anne_scolaire=%d",(self.id_tutilaire,self.id_class,self.id_anne_scolaire,
+            curseur.execute("update assigner_class set id_tutilaire=%s,id_class=%s,id_anne_scolaire=%s where id_tutilaire=%s and id_class=%s and id_anne_scolaire=%s",(self.id_tutilaire,self.id_class,self.id_anne_scolaire,
                                                                                                                                                                        id_tutilaire,id_class,id_anne_scolaire))
             return True
         except Exception as e:

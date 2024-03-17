@@ -155,17 +155,25 @@ class InscriptionFront:
         #remplir les combobox de classe et d'annee scolaire et d'eleve
         eleve=eleve_back("","","","","")
         eleves=eleve.get_all(self.connexion.get_curseur())
+        eleve_t=[]
         for eleve in eleves:
-            self.combo_eleve['values']=(str(eleve[0])+"|"+eleve[1])
+            eleve_t.append(str(eleve[0])+"|"+eleve[1])
+        self.combo_eleve['values']=eleve_t
         classe=Classe("")
         classes=classe.get_all(self.connexion.get_curseur())
+        class_t=[]
         for classe in classes:
-            self.combo_classe['values']=(str(classe[0])+"|"+classe[1])
+            class_t.append(str(classe[0])+"|"+classe[1])
+            
+        self.combo_classe['values']=class_t
         anne=AnneScolaire("",True)
         annees=anne.get_all(self.connexion.get_curseur())
+        anne_liste=[]
         for anne in annees:
-            #ajouter dan
-            self.combo_anne['values']=(str(anne[0])+"|" +anne[1])
+            anne_liste.append(str(anne[0])+"|" +anne[1])
+        anne_liste=tuple(anne_liste)
+            
+        self.combo_anne['values']= anne_liste
         self.combo_eleve.bind("<<ComboboxSelected>>",self.get_id_eleve)
         self.combo_classe.bind("<<ComboboxSelected>>",self.get_id_classe)
         self.combo_anne.bind("<<ComboboxSelected>>",self.get_id_anne)
