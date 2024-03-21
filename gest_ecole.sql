@@ -31,6 +31,7 @@ nom varchar(30) unique
  id_tutilaire int,
  id_class int,
  id_anne_scolaire int,
+ date_inscrip datetime default curent,
  constraint pk_assign primary key(id_tutilaire,id_class,id_anne_scolaire),
  constraint pf_assign_titulaire foreign key (id_tutilaire) references utilisateur(id_user),
  constraint pf_id_class_assign foreign key (id_class) references classe(id_class),

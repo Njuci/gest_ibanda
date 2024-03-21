@@ -129,8 +129,12 @@ class EleveFront:
         self.tree.delete(*self.tree.get_children())
         for eleve in eleves:
             if eleve[0]%2==0:
+                self.tree.tag_configure('pair',background='#51a596')
+        
+        
                 self.tree.insert('','end',values=eleve,tags=('pair',))
             else:
+                self.tree.tag_configure('impair',background='white')
                 self.tree.insert('','end',values=eleve,tags=('impair',))
     def afficher(self):
         #un treeview pour afficher les eleves
@@ -158,7 +162,7 @@ class EleveFront:
         self.tree.place(x=300,y=400,height=200)
         #afficher les eleves dans le treeview les lignes paires en '#51a596' et les lignes impaires en '#091821'
         self.tree.tag_configure('pair',background='#51a596')
-        self.tree.tag_configure('impair',background='#091821')
+        self.tree.tag_configure('impair',background='white')
         self.afficher_eleve()
         self.tree.bind('<ButtonRelease-1>',self.selection)
     def selection(self,evt):

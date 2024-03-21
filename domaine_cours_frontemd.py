@@ -42,6 +42,28 @@ class Domaine_cours_front:
         self.tree.column('Num',width=30)
         self.tree.column('id_domaine',width=30)
         self.tree.column('Nom',width=140)
+        self.tree.tag_configure('evenrow',background='lightgray',foreground='black')
+        self.tree.tag_configure('oddrow',background='white',foreground='black')
+        
+        domaine=Domaine_cours("")
+        data=domaine.get_all(self.connexion.get_curseur())
+        
+        
+        for i in range(len(data)):
+            if i%2==0:
+                tag='evenrow'
+                
+            else:
+                tag='oddrow'
+            #tag='evenrow' if i%2==0 else 'oddrow'
+          
+            self.tree.insert('','end',values=(i+1,data[i][0],data[i][1]),tags=(tag))
+        #selection d'un element dans le treeview
+        self.tree.bind("<Double-Button-1>",self.selection)
+        self.tree.place(x=300,y=200,height=200)
+
+        
+        
         #scrollbar
         self.scrollbar=Scrollbar(self.fen,orient=VERTICAL,command=self.tree.yview)
         self.scrollbar.place(x=505,y=200,height=200)
@@ -51,6 +73,7 @@ class Domaine_cours_front:
         #impression  des domaine_cours
         self.bouton_imp=Button(self.fen,text='Imprimer', background='#FF4500',font=("Times",16),fg='white',command=self.imprimer)
         self.bouton_imp.place(x=650,y=400,width=100)
+        #self.afficher()
         
         self.run()
 
@@ -63,9 +86,11 @@ class Domaine_cours_front:
         for i in self.tree.get_children():
             self.tree.delete(i)
         for i in range(len(data)):
+            tags='evenrow' if i%2==0 else 'oddrow'
+            self.tree.tag_configure(tags,foreground='black')
             self.tree.insert('','end',values=(i+1,data[i][0],data[i][1]))
         #selection d'un element dans le treeview
-        self.tree.bind("<Button-1>",self.selection)
+        self.tree.bind("<Double-Button-1>",self.selection)
         self.tree.place(x=300,y=200,height=200)
 
     def selection(self,event):        
@@ -93,6 +118,7 @@ class Domaine_cours_front:
         if domaine.update(self.connexion.get_curseur(),self.id_domaine.get()):
             showinfo("Succès","Domaine modifié avec succès")
             self.clear_entry()
+        
             self.run()
         else:
             showerror("Erreur","Erreur lors de la modification du domaine")
