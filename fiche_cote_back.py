@@ -44,7 +44,10 @@ class Fiche_cote_back:
         return False
     def get_fiche_cote_by_id_cours_by_id_class_and_id_anne(self,cursor, id_cours,id_class,id_anne):
         try:
-            cursor.execute("select * from fiche_cote where id_cours=%s and id_inscription in (select id_inscription from inscription where id_class=%s and id_anne=%s)", (id_cours,id_class,id_anne))
+            cursor.execute("select i.id_inscription, e.nom_eleve,f.p1,f.p2,f.ex1,f.p3,f.p4,f.ex2 from fiche_cote f join cours c on  f.id_cours=c.id_cours"+" join inscription i on f.id_inscription=i.id_inscription"+
+                " join anne_scolaire a on a.id =i.id_anne_scol join "+
+                " classe cl on i.id_class=cl.id_class join eleve e on i.id_eleve =e.id_eleve "+
+                " where  f.id_cours=%s and cl.id_class=%s and a.id=%s;", (id_cours,id_class,id_anne))
             return cursor.fetchall()
         except Exception as e:
             showerror("Error", str(e))
