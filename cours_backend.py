@@ -107,4 +107,10 @@ class cours_back:
          except Exception as e:
             showerror("Error", str(e))
             return False
-         
+      def verifier_ponderation_p_exam(self,cursor,id_cours):
+         try:
+            cursor.execute("select max_exam,max_period from cours where id_cours=%s", (id_cours,))
+            return cursor.fetchone()
+         except Exception as e:
+            showerror("Error", str(e))
+            return False

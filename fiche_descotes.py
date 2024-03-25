@@ -29,6 +29,15 @@ class fiche_descotes:
         self.cours=ttk.Combobox(self.fen,font=("Arial",15))
         self.cours.place(x=550,y=100,width=200)
         self.remplir_combobox()
+        self.style=ttk.Style()
+        self.style.configure(
+            "Treeview",
+            background='white',
+            foreground='black',
+            fieldsbackground='#51a596',          
+            
+        )
+        self.style.map('Treeview',background=[('selected','#51a596')])
         #tableau pour afficher les cotes
         self.tree=treeEdit.TreeviewEditable(self.fen,show='headings',)
         self.tree['columns'] = ('IDInscription  Nom', 'P1', 'P2','EX1','P3','P4','EX2')
@@ -49,20 +58,23 @@ class fiche_descotes:
         self.tree.column('P4', width=40)
         self.tree.column('EX2', width=40)
         self.tree.place(x=305, y=150,height=350)
-        #scrollbar
-        #self.scrol=ttk.Scro
+        self.scrollbar=Scrollbar(self.fen,orient=VERTICAL,command=self.tree.yview)
+        self.scrollbar.place(x=705,y=150,height=350)
+        self.tree.config(yscrollcommand=self.scrollbar.set)
+        self.tree.tag_configure('oddrow',background='white')
+        self.tree.tag_configure('evenrow',background='lightblue')
         self.btn_imprimer=Button(self.fen,text="Imprimer",font=("Arial",15),background='#FF4500',command=self.imprimer)
         self.btn_imprimer.place(x=305,y=505,width=190, height=40)
         self.cours.bind("<<ComboboxSelected>>",self.afficher)
         #self.afficher()
         self.tree.new_values_callback=self.avoir_nouvelles_valeurs
         
-        
+   #avoir les nouvelles valeurs     
     def avoir_nouvelles_valeurs(self,values):
         self.new_values=values
         print(self.new_values)
         self.decomposer_valeur(self.cours,self.new_values)
-        
+#remplir la combobox avec les cours de la classe
     def remplir_combobox(self):
         #remplir la combobox avec les cours de la classe
         cour=cours_back("","",0,0,0)
@@ -71,6 +83,7 @@ class fiche_descotes:
     
     def fenetre(self):
       return self.fen
+  #decomposer les valeurs pour les inserer dans la base de donnees
     def decomposer_valeur(self,cours,values):
         id_cours=cours.get().split('|')[0]
         id_inscription=values[0].split('|')[0]
@@ -97,34 +110,68 @@ class fiche_descotes:
         
         
         fiche=Fiche_cote_back(id_cours,id_inscription,liste[0],liste[1],liste[2],liste[3],liste[4],liste[5])
+        
         if fiche.get_fiche_cote_by_id(self.connexion.curseur,id_cours,id_inscription):
-            if fiche.update_fiche_cote(self.connexion.curseur,id_cours,id_inscription):
-                self.afficher(None)
-                print("mise à jour réussie")
-            else:
-                print("mise à jour échouée")
+            if self.verifier_valeurs(liste):
 
+                if fiche.update_fiche_cote(self.connexion.curseur,id_cours,id_inscription):
+                    showinfo("Succès","mise à jour réussie")
+                    self.afficher(None)
+                else:
+                    showerror("Erreur","Echec de la mise à jour")
+                    self.afficher(None)
+            else:
+                showerror("Erreur","Les valeurs entrées sont supérieures aux valeurs maximales de la classe")
+                self.afficher(None)
+        
+    #verifier si la valeur est un entier
     def is_valid_int(self,text):
         try:
             int(text)
             return True
         except ValueError:
             return False
-        
+    #afficher les cotes des eleves
     def afficher(self,event):
         fiche=Fiche_cote_back(0,0,0,0,0,0,0,0)
         a=fiche.get_fiche_cote_by_id_cours_by_id_class_and_id_anne(self.connexion.curseur,self.cours.get().split('|')[0],1,1)
         #effacer les anciennes valeurs
         for i in self.tree.get_children():
             self.tree.delete(i)
-            
+        cpt=1
+        #afficher les nouvelles valeurs   
         for i in a:
-            self.tree.insert('', 'end', values=(str(i[0])+'|'+str(i[1]),        str(i[2]), str(i[3]),
+            if cpt%2==0:
+                tag='oddrow'
+                self.tree.insert('', 'end', values=(str(i[0])+'|'+str(i[1]),        str(i[2]), str(i[3]),
                                                       str(i[4]),str(i[5]),
-                                                      str(i[6]),str(i[7])))
+                                                      str(i[6]),str(i[7])),tags=(tag,))
+                cpt=cpt+1
+            else:
+                
+                tag='evenrow'
+                self.tree.insert('', 'end', values=(str(i[0])+'|'+str(i[1]),        str(i[2]), str(i[3]),
+                                                      str(i[4]),str(i[5]),
+                                                      str(i[6]),str(i[7])),tags=(tag,))
+                cpt=cpt+1
 
     def imprimer(self):
         pass
+    #verifier si les valeurs ne sont pas grandes que les periodes et les examens
+    def verifier_valeurs(self,values):
+        id_cours=self.cours.get().split('|')[0]
+        cour=cours_back("","",0,0,0)
+        a=cour.verifier_ponderation_p_exam(self.connexion.curseur,id_cours)
+        print(a)
+        periode=a[1]
+        examen=a[0]
+        print("examen",examen,"periode",periode)
+        print("values",values)
+        if values[0]>periode or values[1]>periode or values[2]>examen or values[3]>periode or values[4]>periode or values[5]>examen:
+            return False
+        else:
+            return True
+        
 f=fiche_descotes(Connexion())
 f.fenetre().mainloop()
         
