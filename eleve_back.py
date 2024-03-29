@@ -40,28 +40,70 @@ class eleve_back:
         self.sexe = sexe
         self.date_nais = date_nais
         self.lieu_nais = lieu_nais
+    def get_eleves(self,curseur,id_anne,id_classe):
+        """
+        voir les eleves d'une classe pour annee scolaire
+        """
+        try:
+            curseur.execute("select count(*) from inscription where id_class=%s and id_anne_scol=%s",(id_classe,id_anne))
+            return curseur.fetchone()
+        except Exception as e:
+            showerror("Erreur",f"Error getting all student information: {str(e)}")
+            return False
+    def get_eleves_fille(self,curseur,id_anne,id_classe):
+        """
+        voir les eleves filles d'une classe pour annee scolaire
+        """
+        try:
+            curseur.execute("select count(*) from inscription i join eleve e where i.id_class=%s and i.id_anne_scol=%s and e.sexe='F'",(id_classe,id_anne))
+            return curseur.fetchone()
+        except Exception as e:
+            showerror("Erreur",f"Error getting all student information: {str(e)}")
+            return False
+    
+    def get_last_id(self,curseur):
+        try:
+            curseur.execute("select max(id) from eleve")
+            f=[curseur.fetchone(),True]
+            
+            return f
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False,False
+    def get_eleves_garcon(self,curseur,id_anne,id_classe):
+        """
+        voir les eleves garcons d'une classe pour annee scolaire
+        """
+        try:
+            curseur.execute("select count(*) from inscription i join eleve e where i.id_class=%s and i.id_anne_scol=%s and e.sexe='M'",(id_classe,id_anne))
+            return curseur.fetchone()
+        except Exception as e:
+            showerror("Erreur",f"Error getting all student information: {str(e)}")
+            return False
+        
+        
+        
     def get_all(self,curseur):
         """
         Get all the students' information.
         """
         try:
             # Add code here to get all the students' information
-            curseur.execute("select * from eleve")
+            curseur.execute("select id_eleve,num_permanant,nom_eleve,sexe,date_nais,lieu_nais, Date_format(date_enregistrement,'%Y-%m-%d') from eleve order by(date_enregistrement)")
             return curseur.fetchall()
         except Exception as e:
             # Handle any exceptions that occur during getting all the students' information
            showerror("Erreur",f"Error getting all student information: {str(e)}")
            return False
-        
-    def save(self,curseur):
+    
+    def save(self,curseur,id):
         """
         Save the student's information.
         """
         try:
             # Add code here to save the student's information
-            query="insert into eleve  values(%s,%s,%s,%s,%s,%s)",(2,self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais)
-            print(query)
-            curseur.execute(query)
+            query="insert into eleve(id_eleve,num_permanant,nom_eleve,sexe,date_nais,lieu_nais)  values(%s,%s,%s,%s,%s,%s)",(id,self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais)
+            curseur.execute("insert into eleve(id_eleve,num_permanant,nom_eleve,sexe,date_nais,lieu_nais)  values(%s,%s,%s,%s,%s,%s)",(id,self.num_permenant,self.nom_eleve,self.sexe,self.date_nais,self.lieu_nais,))
             return True
         except Exception as e:
             # Handle any exceptions that occur during saving

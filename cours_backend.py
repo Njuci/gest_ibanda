@@ -31,7 +31,29 @@ class cours_back:
          except Exception as e:
             showerror("Error", str(e))
             return False
-            
+      def get_nombre_cours_by_classe(self,cursor,id_class):
+         try:
+            cursor.execute("select count(*) from cours where id_class=%s", (id_class,))
+            return cursor.fetchone()
+         except Exception as e:
+            showerror("Error", str(e))
+            return False
+      def get_nombre_cours_by_domaine(self,cursor,id_dom):
+         try:
+            cursor.execute("select count(*) from cours where id_dom=%s", (id_dom,))
+            return cursor.fetchone()
+         except Exception as e:
+            showerror("Error", str(e))
+            return False
+      def get_nombre_cours_by_classe_domaine(self,cursor,id_class,id_dom):
+         try:
+            cursor.execute("select count(*) from cours where id_class=%s and id_dom=%s", (id_class,id_dom))
+            return cursor.fetchone()
+         except Exception as e:
+            showerror("Error", str(e))
+            return False
+      
+         
    
       def get_cours(self,cursor):
          try:

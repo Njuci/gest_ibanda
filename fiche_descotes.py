@@ -174,4 +174,4 @@ class fiche_descotes:
         
 f=fiche_descotes(Connexion())
 f.fenetre().mainloop()
-        
+#c'était juste une blague

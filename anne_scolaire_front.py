@@ -24,6 +24,7 @@ pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
 
 """
 import side_bar 
+import generate_key as gn
 class anne_scolaire:
     def __init__(self,connection):
         self.connexion=connection
@@ -65,7 +66,7 @@ class anne_scolaire:
         self.tree.heading('Id', text='Id')
         self.tree.heading('Designation', text='Désignation')
         self.tree.heading('Statut', text='Statut')
-        self.tree.column('Id',width=20)
+        self.tree.column('Id',width=50)
         self.tree.column('Designation',width=100)
         self.tree.column('Statut',width=50)
         #colorer les cases du treeview en fonction de la valeur de la colonne statut
@@ -80,6 +81,7 @@ class anne_scolaire:
         annee=AnneScolaire(self.selected_annee,self.selected_statut)
         if annee.delete(self.connexion.get_curseur()):
             showinfo("succès","l'année scolaire a été supprimée")
+            self.clean_entry()
             self.remplir_tree()
         else:
             showerror("Erreur","l'année scolaire n'a pas été supprimée")
@@ -89,13 +91,23 @@ class anne_scolaire:
         annee=AnneScolaire(self.selected_annee,self.selected_statut)
         if annee.update(self.connexion.get_curseur(),self.selected_id):
             showinfo("succès","l'année scolaire a été modifiée")
+            self.clean_entry()
             self.remplir_tree()
         else:
             showerror("Erreur","l'année scolaire n'a pas été modifiée")
     def ajouter(self):
 
         annee=AnneScolaire(self.tex_nom.get(),self.radio_encours.get())
-        if annee.save(self.connexion.get_curseur()):
+        id=annee.get_last_id(self.connexion.get_curseur())
+        if id[1]==True:
+            f=id[0][0]
+        
+            if  id[0][0] ==None:
+                f=1
+            else:
+                f=id[0][0]+1
+        key=gn.generate_key("AN",5,f)
+        if annee.save(self.connexion.get_curseur(),key):
             showinfo("succès","l'année scolaire a été ajoutée")
             self.remplir_tree()
         else:

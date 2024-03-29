@@ -13,6 +13,7 @@ lieu_nais varchar(30)
 en se basant sur les codes de class_front 
 je fais une interface graphique d'ajout, de modification et de suppression d'un élève et en metant le meme sidebar
 """
+import generate_key as gn
 import datetime as dt
 from tkcalendar import DateEntry
 from tkinter import *
@@ -23,7 +24,7 @@ from eleve_back import eleve_back
 from tkinter.ttk import Treeview,Combobox
 import side_bar
 import report
-
+import login_back 
 class EleveFront:
     def __init__(self,connection):
         self.connexion=connection
@@ -80,6 +81,38 @@ class EleveFront:
         self.combobox_date['values']=('Tous','Aujourd\'hui','Cette semaine','Ce mois','Cette année')
         self.combobox_date.bind('<<ComboboxSelected>>',self.afficher_eleve)
         #bouton pour imprimer
+        
+        #un treeview pour afficher les eleves
+        self.tree=Treeview(self.fen, columns=('Id','Num Permanant','Nom','Sexe','Date de naissance','Lieu de naissance','Date Enre'), show='headings')
+        self.tree.heading('Id', text='Id',anchor='center')
+        self.tree.heading('Num Permanant', text='NumP',anchor='w')
+        self.tree.heading('Nom', text='Nom',anchor='w')
+        self.tree.heading('Sexe', text='Sexe',anchor='w')
+        self.tree.heading('Date de naissance', text='Date de naissance',anchor='w')
+        self.tree.heading('Lieu de naissance', text='Lieu de naissance',anchor='w')
+        self.tree.heading('Date Enre',text="Date Enregistrement",anchor='w')
+        self.tree.column('Id',width=80,anchor='center')
+        self.tree.column('Num Permanant',width=80,anchor='center')
+        self.tree.column('Nom',width=150,anchor='center')
+        self.tree.column('Sexe',width=30,anchor='center')
+        self.tree.column('Date de naissance',width=80,anchor='center')
+        self.tree.column('Lieu de naissance',width=70,anchor='center')
+        self.tree.column('Date Enre',width=80,anchor='center')
+        
+        #scrollbar
+        self.scrollbar=Scrollbar(self.fen,orient=VERTICAL,command=self.tree.yview)
+        self.scrollbar.place(x=880,y=400,height=200)
+        self.tree.config(yscrollcommand=self.scrollbar.set)
+
+    
+        self.tree.place(x=250,y=400,height=200)
+        
+        #afficher les eleves dans le treeview les lignes paires en '#51a596' et les lignes impaires en '#091821'
+        
+        self.tree.tag_configure('oddrow',background='white')
+        self.tree.tag_configure('evenrow',background='lightblue')
+        self.afficher_eleve()
+        self.tree.bind('<ButtonRelease-1>',self.selection)
         self.bouton_imp=Button(self.fen,text='Imprimer', background='#FF4500',font=("Times",16),fg='white',command=self.imprimer)
         self.bouton_imp.place(x=100,y=440,width=100)
 
@@ -97,8 +130,23 @@ class EleveFront:
         num_permanent=self.tex_num.get()
         if nom and sexe and date_nais and lieu_nais and num_permanent:
             eleve=eleve_back(num_permanent,nom,sexe,date_nais,lieu_nais)
-            eleve.save(self.connexion.get_curseur())
-            self.afficher_eleve()
+            id=eleve.get_last_id(self.connexion.get_curseur())
+            if id[1]==True:
+                f=id[0][0]
+            
+                if  id[0][0] ==None:
+                    f=1
+                else:
+                    f=id[0][0]+1
+            key=gn.generate_key("EL",8,f)
+            print(key)
+            curseur=login_back.Connexion()
+            curseur.login()
+            
+            if eleve.save(curseur.db.cursor(),key):
+                showinfo("Ajout Eleve","Eleve Ajouté(e)")
+                self.clean_entry()
+                self.afficher_eleve()
         else:
             showwarning("Attention","Veuillez remplir tous les champs")
     def modify(self):
@@ -112,6 +160,8 @@ class EleveFront:
         if nom and sexe and date_nais and lieu_nais and num_permanent:
             eleve=eleve_back(num_permanent,nom,sexe,date_nais,lieu_nais)
             eleve.update(self.connexion.get_curseur(),id)
+            showinfo("Modification","Information de l'élève modifié")
+            self.clean_entry()
             self.afficher_eleve()
         else:
             showwarning("Attention","Veuillez selectionner un élève")
@@ -127,44 +177,20 @@ class EleveFront:
         eleve=eleve_back("","","","","")
         eleves=eleve.get_all(self.connexion.get_curseur())
         self.tree.delete(*self.tree.get_children())
+        cpt=1
         for eleve in eleves:
-            if eleve[0]%2==0:
-                self.tree.tag_configure('pair',background='#51a596')
+            if cpt%2==0:
+                tag='evenrow'
         
-        
-                self.tree.insert('','end',values=eleve,tags=('pair',))
+                self.tree.insert('','end',values=eleve,tags=(tag,))
+                cpt=cpt+1
             else:
-                self.tree.tag_configure('impair',background='white')
-                self.tree.insert('','end',values=eleve,tags=('impair',))
+                tag='oddrow'
+                self.tree.insert('','end',values=eleve,tags=(tag,))
+                cpt=cpt+1
+           
     def afficher(self):
-        #un treeview pour afficher les eleves
-        self.tree=Treeview(self.fen, columns=('Id','Num Permanant','Nom','Sexe','Date de naissance','Lieu de naissance','Date Enre'), show='headings')
-        self.tree.heading('Id', text='Id',)
-        self.tree.heading('Num Permanant', text='NumP')
-        self.tree.heading('Nom', text='Nom')
-        self.tree.heading('Sexe', text='Sexe')
-        self.tree.heading('Date de naissance', text='Date de naissance')
-        self.tree.heading('Lieu de naissance', text='Lieu de naissance')
-        self.tree.heading('Date Enre',text="Date Enregistrement")
-        self.tree.column('Id',width=10)
-        self.tree.column('Num Permanant',width=40)
-        self.tree.column('Nom',width=150)
-        self.tree.column('Sexe',width=50)
-        self.tree.column('Date de naissance',width=90)
-        self.tree.column('Lieu de naissance',width=100)
-        self.tree.column('Date Enre',width=130)
-        #scrollbar
-        self.scrollbar=Scrollbar(self.fen,orient=VERTICAL,command=self.tree.yview)
-        self.scrollbar.place(x=880,y=400,height=200)
-        self.tree.config(yscrollcommand=self.scrollbar.set)
-
-    
-        self.tree.place(x=300,y=400,height=200)
-        #afficher les eleves dans le treeview les lignes paires en '#51a596' et les lignes impaires en '#091821'
-        self.tree.tag_configure('pair',background='#51a596')
-        self.tree.tag_configure('impair',background='white')
-        self.afficher_eleve()
-        self.tree.bind('<ButtonRelease-1>',self.selection)
+        pass
     def selection(self,evt):
         #selectionner un eleve dans le treeview
         self.selected_id=self.tree.item(self.tree.selection())['values'][0]        
@@ -182,4 +208,5 @@ class EleveFront:
         self.tex_num.delete(0,END)
     def fenetre(self):
         return self.fen
+    
 

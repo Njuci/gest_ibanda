@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
 from login_back import Connexion
 from user_back import User_back
-from anne_scolaire_front import anne_scolaire
+import anne_scolaire_front 
 class Login_front:
     def __init__(self):
         self.fen=Tk()
@@ -46,7 +46,7 @@ class Login_front:
                        
                         if type[0][0]=="secretaire":
                             self.fen.destroy()
-                            anne=anne_scolaire(con)
+                            anne=anne_scolaire_front.anne_scolaire(con)
                             anne.fenetre().mainloop()
 
 

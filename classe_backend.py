@@ -13,22 +13,33 @@ faire une classe Classe qui a les méthodes suivantes:
 - get_nom qui retourne le nom de la classe
 - get_id qui retourne l'id de la classe
 """
+from tkinter.messagebox import showerror
 class Classe:
     def __init__(self, nom):
         self.nom =nom
         self.encours=None
     def get_all(self,curseur):
         try:
-            curseur.execute("select * from classe")
+            curseur.execute("select id_class,nom from classe order by(id_class)")
             return curseur.fetchall()
         except Exception as e:
             print(str(e))
             return False
+    
+    def get_last_id(self,curseur):
+        try:
+            curseur.execute("select max(id) from classe")
+            f=[curseur.fetchone(),True]
+            
+            return f
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False,False
     def get_nom(self):
         return self.nom
-    def save(self,curseur):
+    def save(self,curseur,id):
         try:
-            curseur.execute("insert into classe(nom) values(%s)",(self.nom,))
+            curseur.execute("insert into classe(id_class,nom) values(%s,%s)",(id,self.nom,))
             return True
         except Exception as e:
             print(str(e))

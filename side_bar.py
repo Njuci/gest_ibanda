@@ -32,7 +32,7 @@ class SideBar:
         self.gest_login = Button(self.MenuContainer, text='Accueil', command=self.login)
         self.gest_login.place(x=20, y=80, width=190, height=40)
 
-        self.gest_clsse = Button(self.MenuContainer, text='Classe', command=self.save)
+        self.gest_clsse = Button(self.MenuContainer, text='Classe', command=self.classe_scol)
         self.gest_clsse.place(x=20, y=140, width=190, height=40)
 
         self.gest_anne_sc = Button(self.MenuContainer, text='Anne scolaire', command=self.anne_scol)

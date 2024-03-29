@@ -119,6 +119,10 @@ class InscriptionFront:
     def ajouter(self):
         self.E=Inscription_back(self.id_inscription.get(),self.combo_eleve.get().split("|")[0],self.combo_anne.get().split("|")[0],self.combo_classe.get().split("|")[0])
         if self.E.save(self.connexion.get_curseur()):
+            #creer une transaction qui permet de donner 0 à l'eleve pour chaque cours de la classe ou il est inscrit maintenant
+            #creer une transaction qui permet de donner 0 à l'eleve pour chaque cours de la classe ou il est inscrit maintenant
+            
+            
             self.afficher()
             showinfo("Succès","Ajout réussi")
         else:

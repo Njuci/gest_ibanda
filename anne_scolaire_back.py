@@ -7,13 +7,15 @@
  
 """
 """class AnneScolaire:"""
+from tkinter.messagebox import showerror
+
 class AnneScolaire:
     def __init__(self, nom, encours):
         self.nom = nom
         self.encours = encours
     def get_all(self,curseur):
         try:
-            curseur.execute("select * from anne_scolaire")
+            curseur.execute("select id,nom,encours from anne_scolaire")
             return curseur.fetchall()
         except Exception as e:
             print(str(e))
@@ -23,9 +25,9 @@ class AnneScolaire:
         return self.nom
     def get_encours(self):
         return self.encours
-    def save(self,curseur):
+    def save(self,curseur,id):
         try:
-            curseur.execute("insert into anne_scolaire(nom,encours) values(%s,%s)",(self.nom,self.encours))
+            curseur.execute("insert into anne_scolaire(id,nom,encours) values(%s,%s,%s)",(id,self.nom,self.encours))
             return True
         except Exception as e:
             print(str(e))
@@ -46,3 +48,13 @@ class AnneScolaire:
         except Exception as e:
             print(str(e))
             return False
+    
+    def get_last_id(self,curseur):
+        try:
+            curseur.execute("select max(id_an) from anne_scolaire")
+            f=[curseur.fetchone(),True]
+            
+            return f
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False,False

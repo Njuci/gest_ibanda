@@ -11,7 +11,7 @@ from login_back import Connexion
 from side_bar_proviseur import Sidebar_proviseur
 from tkinter.messagebox import showerror,showinfo
 from tkinter import ttk
-
+import generate_key as gn
 class Domaine_cours_front:
     def __init__(self):
         self.fen=Tk()

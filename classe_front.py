@@ -23,7 +23,7 @@ pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
 """
 
 import side_bar
-
+import generate_key as gn
 class ClasseFront:
     def __init__(self,connection):
         self.connexion=connection
@@ -55,7 +55,7 @@ class ClasseFront:
         self.tree=Treeview(self.fen, columns=('Id','Designation'), show='headings')
         self.tree.heading('Id', text='Id')
         self.tree.heading('Designation', text='Designation')
-        self.tree.column('Id',width=20)
+        self.tree.column('Id',width=50)
         self.tree.column('Designation',width=100)
         
         self.tree.place(x=300,y=300,height=200)
@@ -73,8 +73,19 @@ class ClasseFront:
     def ajouter(self):
         if self.E==None:
             self.E=Classe(self.tex_nom.get())
-            if self.E.save(self.connexion.get_curseur()):
+            id=self.E.get_last_id(self.connexion.get_curseur())
+            if id[1]==True:
+                f=id[0][0]
+            
+                if  id[0][0] ==None:
+                    f=1
+                else:
+                    f=id[0][0]+1
+            key=gn.generate_key("Cl",4,f)
+            
+            if self.E.save(self.connexion.get_curseur(),key):
                 self.afficher()
+                self.E=None
                 showinfo("Succès","Ajout réussi")
             else:
                 showerror("Echec","Ajout échoué")
