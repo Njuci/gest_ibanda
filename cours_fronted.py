@@ -15,12 +15,13 @@ from domaine_cours_back import Domaine_cours
 from side_bar_proviseur import Sidebar_proviseur
 from login_back import Connexion
 from classe_backend import Classe
+import generate_key as gn 
 class Cours:
     def __init__(self,root):
         self.fen = root
         self.connexion=Connexion()
         self.fen.title("Gestion des cours")
-        self.fen.geometry("800x900+150+0")
+        self.fen.geometry("980x900+150+0")
         self.fen.resizable(0,0)
         self.fen.configure(background='#51a596')
         self.side_bar=Sidebar_proviseur(self.fen,self.connexion.get_curseur())
@@ -54,19 +55,21 @@ class Cours:
         self.bouton_modifier.place(x=500,y=350,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
         self.bouton_supprimer.place(x=650,y=350,width=100)
-        self.tree=ttk.Treeview(self.fen,columns=('Num','nom_cours','id_dom','max_period','max_exam','id_class'),show='headings')
+        self.tree=ttk.Treeview(self.fen,columns=('Num','Id Cours','nom_cours','id_dom','max_period','max_exam','id_class'),show='headings')
         self.tree.heading('Num',text='Numéro')
+        self.tree.heading('Id Cours', text='Id Cours')
         self.tree.heading('nom_cours',text='Nom du cours')
         self.tree.heading('id_dom',text='Domaine')
         self.tree.heading('max_period',text='Max period')
         self.tree.heading('max_exam',text='Max exam')
         self.tree.heading('id_class',text='Classe')
-        self.tree.column('Num',width=50)
+        self.tree.column('Num',width=90)
+        self.tree.column("Id Cours",width=80)
         self.tree.column('nom_cours',width=100)
-        self.tree.column('id_dom',width=100)
-        self.tree.column('max_period',width=100)    
-        self.tree.column('max_exam',width=100)
-        self.tree.column('id_class',width=100)
+        self.tree.column('id_dom',width=150)
+        self.tree.column('max_period',width=50)    
+        self.tree.column('max_exam',width=50)
+        self.tree.column('id_class',width=150)
         self.rempkir_combo_dom()    
         self.rempkir_combo_class()
         self.run()
@@ -94,18 +97,30 @@ class Cours:
         
     def ajouter(self):
         cours=cours_back(self.nom_cours.get(),self.combo_dom.get().split("|")[0],self.max_period.get(),self.max_exam.get(),self.combo_class.get().split("|")[0])
-        if cours.add_cours(self.connexion.get_curseur()):
+        id=cours.get_last_id(self.connexion.get_curseur())
+        if id[1]==True:
+            f=id[0][0]
+            
+            if  id[0][0] ==None:
+                f=1
+            else:
+                f=id[0][0]+1
+        key=gn.generate_key("CR",5,f)
+            
+        
+        if cours.add_cours(self.connexion.get_curseur(),key):
             self.run()
             showinfo("Info", "Cours ajouté avec succès")
         else:
             showerror("Error", "Erreur lors de l'ajout")
     def modifier(self): 
-        cours=cours_back(self.nom_cours.get(),self.combo_dom.get(),self.max_period.get(),self.max_exam.get(),self.combo_class.get())
-        if cours.update_cours(self.connexion.get_curseur(),self.id_cours.get()):
+        cours=cours_back(self.nom_cours.get(),self.combo_dom.get().split("|")[0],self.max_period.get(),self.max_exam.get(),self.combo_class.get().split("|")[0])
+        if cours.update_cours(self.connexion.get_curseur(),self.id_cours):
             self.run()
             showinfo("Info", "Cours modifié avec succès")
         else:
             showerror("Error", "Erreur lors de la modification")
+    
     def supprimer(self):
         cours=cours_back(self.nom_cours.get(),self.combo_dom.get(),self.max_period.get(),self.max_exam.get(),self.combo_class.get())
         if cours.delete_cours(self.connexion.get_curseur()):
@@ -116,29 +131,33 @@ class Cours:
     def run(self):
         for i in self.tree.get_children():
             self.tree.delete(i)
-        for i in cours_back("","","","","").get_cours(self.connexion.get_curseur()):
+        for i in cours_back("","","","","").get_all(self.connexion.get_curseur()):
+            cpt=1
             
-            self.tree.insert("", "end", values=i)
-        self.tree.place(x=200,y=400)
+            self.tree.insert("", "end", values=(cpt,i[0],i[1],i[2]+'|'+i[3],i[4],i[5],i[6]+'|'+i[7]))
+            cpt=cpt+1
+        self.tree.place(x=250,y=400)
         self.tree.bind('<ButtonRelease-1>', self.get_old_selection)
+        
         
     def get_old_selection(self,event):
         self.selected=self.tree.item(self.tree.selection()[0])['values']
         self.nom_cours.delete(0,END)
-        self.nom_cours.insert(0,self.selected[1])
+        self.nom_cours.insert(0,self.selected[2])
         self.combo_dom.delete(0,END)
-        self.combo_dom.insert(0,self.selected[2])
+        self.combo_dom.insert(0,self.selected[3])
         self.max_period.delete(0,END)
-        self.max_period.insert(0,self.selected[3])
+        self.max_period.insert(0,self.selected[4])
         self.max_exam.delete(0,END)
-        self.max_exam.insert(0,self.selected[4])
+        self.max_exam.insert(0,self.selected[5])
         self.combo_class.delete(0,END)
-        self.combo_class.insert(0,self.selected[5])
-        self.id_cours=self.selected[0]
-        
-if __name__ == "__main__":
-    fen=Tk()
-    Cours(fen)
-    fen.mainloop()
+        self.combo_class.insert(0,self.selected[6])
+        self.id_cours=self.selected[1]
+    def fenetre(self):
+        return self.fen
+
+if __name__=='__main__' :
+    s=Cours(Tk())
+    s.fenetre().mainloop()   
     
         

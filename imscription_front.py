@@ -5,6 +5,7 @@ avec tkinter tkinter.ttk et tkcalendar
 en mettant les elves, les classses et les anne_scollaire dans des combobox
 et en mettant le meme sidebar
 """
+import fiche_cote_back as fch
 
 from tkinter import *
 from tkinter.ttk import Combobox
@@ -13,12 +14,13 @@ from inscription_backend import Inscription_back
 from login_back import Connexion
 import side_bar
 from tkinter.ttk import Treeview
-from tkinter.messagebox import showerror,showinfo,showwarning
+from tkinter.messagebox import showerror,showinfo,showwarning,askyesno
 from eleve_back import eleve_back
 from classe_backend import Classe
 from anne_scolaire_back import AnneScolaire
-
-
+import generate_key as gn
+import cours_backend as cours
+from tkinter.messagebox import showerror
 class InscriptionFront:
     def __init__(self,connection):
         self.connexion=connection
@@ -63,7 +65,7 @@ class InscriptionFront:
         self.bouton_chercher.place(x=800,y=300,width=100)
 
         
-        self.selected_id=IntVar()
+        self.selected_id=StringVar()
         self.selected_eleve=StringVar()
         self.selected_classe=StringVar()
         self.selected_anne=StringVar()
@@ -96,7 +98,7 @@ class InscriptionFront:
         pass
     def afficher(self):
         self.tree.delete(*self.tree.get_children())
-        self.E=Inscription_back(0,0,0,0)
+        self.E=Inscription_back("",0,0)
         #compyer le nombre d'inscriptions
         inscription=self.E.get_all(self.connexion.get_curseur())
         #remplir le treeview avec les inscriptions id et nom de l'eleve, id et nom de la classe et l'annee scolaire
@@ -105,6 +107,7 @@ class InscriptionFront:
         for row in inscription:
             cpt+=1
             self.tree.insert("",END,values=(cpt,row[0],row[1],row[2],row[3],row[4]))
+            
     def selection(self,evt):
         self.selected_id=self.tree.item(self.tree.selection())['values'][0]
         self.clean_entry()
@@ -117,13 +120,56 @@ class InscriptionFront:
         self.combo_classe.set('')
         self.combo_anne.set('')
     def ajouter(self):
-        self.E=Inscription_back(self.id_inscription.get(),self.combo_eleve.get().split("|")[0],self.combo_anne.get().split("|")[0],self.combo_classe.get().split("|")[0])
-        if self.E.save(self.connexion.get_curseur()):
+        self.connexion.db.autocommit=False
+        #start transaction
+        self.connexion.db.start_transaction()
+            
+        self.E=Inscription_back(self.combo_eleve.get().split("|")[0],self.combo_anne.get().split("|")[0],self.combo_classe.get().split("|")[0])
+        cour=cours.cours_back("","","","","")
+        #recuperer les cours de la classe
+        resultat=cour.get_cours_by_classe(self.connexion.get_curseur(),self.combo_classe.get().split("|")[0])
+        print(resultat)
+        
+        id=self.E.get_last_id(self.connexion.get_curseur())
+        if id[1]==True:
+            f=id[0][0]
+            
+            if  id[0][0] ==None:
+                    f=1
+            else:
+                f=id[0][0]+1
+            key=gn.generate_key("INS",8,f)    
+        
+        if self.E.save(self.connexion.get_curseur(),key):
+            if len(resultat)!=0:
+                    
+                for i in resultat:
+                    print(i[0])
+                    fiche=fch.Fiche_cote_back(i[0],key,0,0,0,0,0,0)
+                    
+                    if fiche.add_fiche_cote(self.connexion.curseur):
+                        print()
+                        
+                        
+                    else:
+                        self.connexion.db.rollback()
+                        showerror('Fiche des cotes', "Veuillez terminer la configuration de la classe")
+                self.connexion.db.commit()
+            else:
+                self.connexion.db.rollback()
+                
+                #commit
+            #commit
+            self.connexion.db.autocommit=True
+                
+            
+            
             #creer une transaction qui permet de donner 0 à l'eleve pour chaque cours de la classe ou il est inscrit maintenant
             #creer une transaction qui permet de donner 0 à l'eleve pour chaque cours de la classe ou il est inscrit maintenant
             
             
             self.afficher()
+            self.E=None
             showinfo("Succès","Ajout réussi")
         else:
             showerror("Echec","Ajout échoué")
@@ -133,21 +179,28 @@ class InscriptionFront:
             self.E=Inscription_back(0,self.combo_eleve.get(),self.combo_classe.get(),self.combo_anne.get())
             if self.E.update(self.connexion.get_curseur(),self.selected_id):
                 self.afficher()
+                
                 self.E=None
                 showinfo("Succès","Modification réussie")
             else:
                 showerror("Echec","Modification échouée")
+                self.E=None
         else:
             showwarning("Echec","Veuillez vider le formulaire")
 
     def supprimer(self):
         if self.E==None:
             self.E=Inscription_back(0,self.combo_eleve.get(),self.combo_classe.get(),self.combo_anne.get())
-            self.E=None
-            if self.E.delete(self.connexion.get_curseur()):
-                self.afficher()
-                showinfo("Succès","Suppression réussie")
+            if askyesno("Confirmation", "Êtes-vous sûr de vouloir supprimer cette inscription ?"):
+                if self.E.delete(self.connexion.get_curseur()):
+                    self.afficher()
+                    showinfo("Succès", "Suppression réussie")
+                    self.E = None
+                else:
+                    self.E = None
+                    showerror("Echec", "Suppression échouée")
             else:
+                showinfo("Annulation", "Suppression annulée")
                 showerror("Echec","Suppression échouée")
         else:
             showwarning("Echec","Veuillez vider le formulaire")
@@ -161,7 +214,7 @@ class InscriptionFront:
         eleves=eleve.get_all(self.connexion.get_curseur())
         eleve_t=[]
         for eleve in eleves:
-            eleve_t.append(str(eleve[0])+"|"+eleve[1])
+            eleve_t.append(str(eleve[0])+"|"+eleve[2])
         self.combo_eleve['values']=eleve_t
         classe=Classe("")
         classes=classe.get_all(self.connexion.get_curseur())

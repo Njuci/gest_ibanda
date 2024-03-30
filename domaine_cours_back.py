@@ -14,16 +14,16 @@ class Domaine_cours:
         self.nom_dom = nom_dom
     def get_all(self,curseur):
         try:
-            curseur.execute("select * from domaine_cours")
+            curseur.execute("select id_dom,nom_dom from domaine_cours order by(id_dom)")
             return curseur.fetchall()
         except Exception as e:
             showerror("Erreur",str(e))
             return False
     def get_nom(self):
         return self.nom_dom
-    def save(self,curseur):
+    def save(self,curseur,id):
         try:
-            curseur.execute("insert into domaine_cours(nom_dom) values(%s)",(self.nom_dom,))
+            curseur.execute("insert into domaine_cours(id_dom,nom_dom) values(%s,%s)",(id,self.nom_dom,))
             return True
         except Exception as e:
             showerror("Erreur",str(e))
@@ -42,13 +42,23 @@ class Domaine_cours:
         except Exception as e:
             showerror("Erreur",str(e))
             return False
+    
+    def get_last_id(self,curseur):
+        try:
+            curseur.execute("select max(id) from domaine_cours")
+            f=[curseur.fetchone(),True]
+            
+            return f
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False,False
     def get_id(self,curseur):
         try:
             curseur.execute("select id_dom from domaine_cours where nom_dom=%s",(self.nom_dom,))
             return curseur.fetchone()[0]
         except Exception as e:
             showerror("Erreur",str(e))
-            return False
+            return False 
     def get_nom(self,curseur):
         try:
             curseur.execute("select nom_dom from domaine_cours where id_dom=%s",(self.nom_dom,))

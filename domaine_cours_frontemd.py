@@ -4,6 +4,7 @@ comme le fichier assigner_class_front.py, l
 e fichier domaine_cours_front.py est un fichier qui contient une classe qui permet de gerer l'interface graphique pour le domaine de cours
 
 """
+
 from tkinter import *
 from tkinter.ttk import Treeview
 from domaine_cours_back import Domaine_cours
@@ -34,30 +35,18 @@ class Domaine_cours_front:
         self.bouton_modifier.place(x=500,y=150,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
         self.bouton_supprimer.place(x=650,y=150,width=100)
-        self.id_domaine=IntVar()
+        self.id_domaine=StringVar()
         self.tree=ttk.Treeview(self.fen,columns=('Num','id_domaine','Nom'),show='headings')
         self.tree.heading('Num',text='Numéro')
         self.tree.heading('id_domaine',text='Id')
         self.tree.heading('Nom',text='Nom')
         self.tree.column('Num',width=30)
-        self.tree.column('id_domaine',width=30)
+        self.tree.column('id_domaine',width=80)
         self.tree.column('Nom',width=140)
         self.tree.tag_configure('evenrow',background='lightgray',foreground='black')
         self.tree.tag_configure('oddrow',background='white',foreground='black')
+        self.afficher()
         
-        domaine=Domaine_cours("")
-        data=domaine.get_all(self.connexion.get_curseur())
-        
-        
-        for i in range(len(data)):
-            if i%2==0:
-                tag='evenrow'
-                
-            else:
-                tag='oddrow'
-            #tag='evenrow' if i%2==0 else 'oddrow'
-          
-            self.tree.insert('','end',values=(i+1,data[i][0],data[i][1]),tags=(tag))
         #selection d'un element dans le treeview
         self.tree.bind("<Double-Button-1>",self.selection)
         self.tree.place(x=300,y=200,height=200)
@@ -66,7 +55,7 @@ class Domaine_cours_front:
         
         #scrollbar
         self.scrollbar=Scrollbar(self.fen,orient=VERTICAL,command=self.tree.yview)
-        self.scrollbar.place(x=505,y=200,height=200)
+        self.scrollbar.place(x=555,y=200,height=200)
         self.tree.config(yscrollcommand=self.scrollbar.set)
         
         
@@ -87,8 +76,7 @@ class Domaine_cours_front:
             self.tree.delete(i)
         for i in range(len(data)):
             tags='evenrow' if i%2==0 else 'oddrow'
-            self.tree.tag_configure(tags,foreground='black')
-            self.tree.insert('','end',values=(i+1,data[i][0],data[i][1]))
+            self.tree.insert('','end',values=(i+1,data[i][0],data[i][1]),tags=(tags,))
         #selection d'un element dans le treeview
         self.tree.bind("<Double-Button-1>",self.selection)
         self.tree.place(x=300,y=200,height=200)
@@ -105,7 +93,19 @@ class Domaine_cours_front:
         
     def ajouter(self):
         domaine=Domaine_cours(self.entry_nom.get())
-        if domaine.save(self.connexion.get_curseur()):
+        id=domaine.get_last_id(self.connexion.get_curseur())
+        if id[1]==True:
+            f=id[0][0]
+            
+            if  id[0][0] ==None:
+                f=1
+            else:
+                f=id[0][0]+1
+    
+            key=gn.generate_key("DOM",5,f)
+            
+            
+        if domaine.save(self.connexion.get_curseur(),key):
             showinfo("Succès","Domaine ajouté avec succès")
             self.clear_entry()
             self.run()

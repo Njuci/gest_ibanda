@@ -16,25 +16,37 @@ en se referant a la table inscription on peut dire que la classe inscription est
 cette classe est une classe de liaison entre les classes eleve,anne_scolaire et classe
 comme les classes eleve,anne_scolaire et classe sont des classes de base de l'application
 """
+from tkinter import messagebox
 class Inscription_back:
-    def __init__(self,id_inscription,id_eleve,id_anne_scol,id_class):
-        self.id_inscription = id_inscription
+    def __init__(self,id_eleve,id_anne_scol,id_class):
+        self.id_inscription = None
         self.id_eleve = id_eleve
         self.id_anne_scol = id_anne_scol
         self.id_class = id_class
    
     def get_all(self,curseur):
         try:
-            curseur.execute("select inscription.id_eleve, eleve.nom_eleve,inscription.id_anne_scol,inscription.id_class ,inscription.id_inscription from eleve"+
-                            " join inscription on inscription.id_eleve=eleve.id_eleve")
+            curseur.execute("select inscription.id_eleve, eleve.nom_eleve,inscription.id_anne_scol,inscription.id_class,cl.nom ,inscription.id_inscription from eleve"+
+                            " join inscription on inscription.id_eleve=eleve.id_eleve join classe cl on cl.id_class=inscription.id_class")
+            
             return curseur.fetchall()
         except Exception as e:
             print(str(e))
             return False
-    
-    def save(self,curseur):
+    #get last id
+    #
+    def get_last_id(self,curseur):
         try:
-            curseur.execute("insert into inscription(id_inscription,id_eleve,id_anne_scol,id_class) values(%s,%s,%s,%s)",(self.id_inscription,self.id_eleve,self.id_anne_scol,self.id_class))
+            curseur.execute("select max(id) from inscription")
+            return curseur.fetchone(),True
+        except Exception as e:
+            messagebox.showerror("Error","Error in the database "+str(e))
+            return False,False
+    
+    
+    def save(self,curseur,id):
+        try:
+            curseur.execute("insert into inscription(id_inscription,id_eleve,id_anne_scol,id_class) values(%s,%s,%s,%s)",(id,self.id_eleve,self.id_anne_scol,self.id_class))
             return True
         except Exception as e:
             print(str(e))

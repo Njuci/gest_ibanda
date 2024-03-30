@@ -27,6 +27,15 @@ class Fiche_cote_back:
         self.p3=p3
         self.p4=p4
         self.ex2=ex2
+    
+    def get_last_id(self,curseur):
+        try:
+            curseur.execute("select max(id) from fiche_cote")
+            return curseur.fetchone(),True
+        except Exception as e:
+            showerror("Error","Error in the database "+str(e))
+            return False,False
+    
     def add_fiche_cote(self,cursor):
         try:
             cursor.execute("insert into fiche_cote values(%s,%s,%s,%s,%s,%s,%s,%s)", (self.id_cours, self.id_inscription, self.p1, self.p2, self.ex1, self.p3, self.p4, self.ex2))
@@ -74,4 +83,28 @@ class Fiche_cote_back:
         except Exception as e:
             showerror("Error", str(e))
             return False
-#     de
+#     
+#     def get_fiche_cote_by_id_cours_by_id_class_and_id_anne(self,cursor, id_cours,id_class,id_anne)
+
+
+    def add_fiche_cote(self, cursor):
+        try:
+            cursor.execute("insert into fiche_cote values(%s,%s,%s,%s,%s,%s,%s,%s)", (self.id_cours, self.id_inscription, self.p1, self.p2, self.ex1, self.p3, self.p4, self.ex2))
+            return True
+        except Exception as e:
+            showerror("Error", str(e))
+            return False
+
+
+
+
+
+
+
+
+
+
+
+
+
+

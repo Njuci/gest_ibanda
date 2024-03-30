@@ -24,9 +24,9 @@ class cours_back:
          self.max_exam=max_e
          self.id_class=id_cls
    
-      def add_cours(self,cursor):
+      def add_cours(self,cursor,id):
          try:
-            cursor.execute("insert into cours values(%s,%s,%s,%s,%s)", (self.nom_cours, self.id_dom, self.max_period, self.max_exam, self.id_class))
+            cursor.execute("insert into cours (id_cours,nom_cours,id_dom,max_period,max_exam,id_class)  values(%s,%s,%s,%s,%s,%s)", (id,self.nom_cours, self.id_dom, self.max_period, self.max_exam, self.id_class))
             return True
          except Exception as e:
             showerror("Error", str(e))
@@ -53,7 +53,14 @@ class cours_back:
             showerror("Error", str(e))
             return False
       
-         
+      def get_all(self,cursor):
+         try:
+            cursor.execute("select cr.id_cours,cr.nom_cours,cr.id_dom,dom.nom_dom,cr.max_period,cr.max_exam,cr.id_class,cl.nom from cours cr join domaine_cours dom on cr.id_dom =dom.id_dom join classe cl on cr.id_class =cl.id_class")
+            return cursor.fetchall()
+         except Exception as e:
+            showerror("Error", str(e))
+            return False
+   
    
       def get_cours(self,cursor):
          try:
@@ -61,8 +68,7 @@ class cours_back:
             return cursor.fetchall()
          except Exception as e:
             showerror("Error", str(e))
-         self.cursor.execute("select * from cours")
-         return False
+            return False
    
       def get_cours_by_id(self,cursor, id_cours):
          try:
@@ -89,7 +95,7 @@ class cours_back:
             return False
       def get_cours_by_classe(self,cursor,id_class):
          try:
-            cursor.execute("select * from cours where id_class=%s", (id_class,))
+            cursor.execute("select id_cours from cours where id_class=%s", (id_class,))
             return cursor.fetchall()
          except Exception as e:
             showerror("Error", str(e))
@@ -136,3 +142,13 @@ class cours_back:
          except Exception as e:
             showerror("Error", str(e))
             return False
+      def get_last_id(self,curseur):
+        try:
+            curseur.execute("select max(id) from cours")
+            f=[curseur.fetchone(),True]
+            
+            return f
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False,False
+    
