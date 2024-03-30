@@ -13,16 +13,16 @@ lieu_nais varchar(30)
 en se basant sur les codes de class_front 
 je fais une interface graphique d'ajout, de modification et de suppression d'un élève et en metant le meme sidebar
 """
-import generate_key as gn
+import accessoir.generate_key as gn
 import datetime as dt
 from tkcalendar import DateEntry
 from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
-from eleve_back import eleve_back
+from . eleve_back import eleve_back
 #from login_back import Connexion
 #from side_bar import SideBar
 from tkinter.ttk import Treeview,Combobox
-import side_bar
+from . import side_bar
 import report
 import login_back 
 class EleveFront:

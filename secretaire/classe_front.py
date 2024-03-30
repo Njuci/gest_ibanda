@@ -14,7 +14,7 @@ avec tkinter
 """
 from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
-from classe_backend import Classe
+from .classe_backend import Classe
 from tkinter.ttk import Treeview
 #from side_bar import SideBar
 """ 
@@ -22,8 +22,8 @@ pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
 
 """
 
-import side_bar
-import generate_key as gn
+from. import side_bar
+from accessoir import generate_key as gn
 class ClasseFront:
     def __init__(self,connection):
         self.connexion=connection

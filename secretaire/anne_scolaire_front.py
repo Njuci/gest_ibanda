@@ -16,15 +16,15 @@ et la méthode save doit retourner True si l'insertion a réussi
 """
 from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
-from anne_scolaire_back import AnneScolaire
+from .anne_scolaire_back import AnneScolaire
 from tkinter.ttk import Treeview
 #from side_bar import SideBar   
 """ 
 pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
 
 """
-import side_bar 
-import generate_key as gn
+from . import side_bar 
+import accessoir.generate_key as gn
 class anne_scolaire:
     def __init__(self,connection):
         self.connexion=connection

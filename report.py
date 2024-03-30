@@ -52,3 +52,4 @@ def generate_pdf(tree,file_name,heading,titre,dimension:list):
     # Générer le PDF
     doc.build(elements)
     return True
+

@@ -11,8 +11,8 @@ from tkinter import *
 from tkinter.messagebox import showerror,showinfo
 from assigner_class_back import Assigner_class_back
 from user_back import User_back
-from classe_backend import Classe
-from anne_scolaire_back import AnneScolaire
+from secretaire.classe_backend import Classe
+from secretaire.anne_scolaire_back import AnneScolaire
 from tkinter.ttk import Treeview
 from login_back import Connexion
 from tkinter import ttk

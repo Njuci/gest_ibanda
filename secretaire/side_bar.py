@@ -15,11 +15,12 @@ from tkinter import *
 pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
 
 """
-import classe_front
-import login_front
-import anne_scolaire_front
-import elelve
-import imscription_front 
+from . import classe_front
+from accessoir import login_front
+from . import anne_scolaire_front
+from . import elelve
+from . import imscription_front
+
 class SideBar:
     def __init__(self, fen,cursor=None):
         self.fen = fen

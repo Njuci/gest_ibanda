@@ -5,20 +5,19 @@ avec tkinter tkinter.ttk et tkcalendar
 en mettant les elves, les classses et les anne_scollaire dans des combobox
 et en mettant le meme sidebar
 """
-import fiche_cote_back as fch
+from titulaire import fiche_cote_back as fch
 
 from tkinter import *
 from tkinter.ttk import Combobox
 from tkcalendar import DateEntry
-from inscription_backend import Inscription_back
-from login_back import Connexion
-import side_bar
+from .inscription_backend import Inscription_back
+from .  import side_bar
 from tkinter.ttk import Treeview
 from tkinter.messagebox import showerror,showinfo,showwarning,askyesno
-from eleve_back import eleve_back
-from classe_backend import Classe
-from anne_scolaire_back import AnneScolaire
-import generate_key as gn
+from .eleve_back import eleve_back
+from .classe_backend import Classe
+from .anne_scolaire_back import AnneScolaire
+import accessoir.generate_key as gn
 import cours_backend as cours
 from tkinter.messagebox import showerror
 class InscriptionFront:
