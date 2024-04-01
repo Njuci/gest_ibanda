@@ -17,6 +17,7 @@ cette classe est une classe de liaison entre les classes eleve,anne_scolaire et 
 comme les classes eleve,anne_scolaire et classe sont des classes de base de l'application
 """
 from tkinter import messagebox
+from tkinter.messagebox import showerror
 class Inscription_back:
     def __init__(self,id_eleve,id_anne_scol,id_class):
         self.id_inscription = None
@@ -29,11 +30,31 @@ class Inscription_back:
             curseur.execute("select inscription.id_eleve, eleve.nom_eleve,inscription.id_anne_scol,inscription.id_class,cl.nom ,inscription.id_inscription from eleve"+
                             " join inscription on inscription.id_eleve=eleve.id_eleve join classe cl on cl.id_class=inscription.id_class")
             
+            
             return curseur.fetchall()
         except Exception as e:
             print(str(e))
             return False
-    #get last id
+    
+    #delete fiche_cote by id_inscription
+    def delete_fiche(self,curseur,id):
+        try:
+            curseur.execute("delete from fiche_cote where id_inscription=%s",(id,))
+            return True
+        except Exception as e:  
+            showerror("Error","Error in the database "+str(e))
+            return False
+    
+    def get_all_b(self,curseur):
+        try:
+            curseur.execute("select inscription.id_eleve, eleve.nom_eleve,inscription.id_anne_scol,inscription.id_class,cl.nom ,inscription.id_inscription ,an.nom from eleve"+
+                            " join inscription on inscription.id_eleve=eleve.id_eleve join classe cl on cl.id_class=inscription.id_class join anne_scolaire an on an.id =inscription.id_anne_scol")
+            
+            
+            return curseur.fetchall()
+        except Exception as e:
+            print(str(e))
+            return False
     #
     def get_last_id(self,curseur):
         try:
@@ -58,9 +79,9 @@ class Inscription_back:
         except Exception as e:
             print(str(e))
             return False
-    def delete(self,curseur):
+    def delete(self,curseur,id):
         try:
-            curseur.execute("delete from inscription where id_inscription=%s",(self.id_inscription,))
+            curseur.execute("delete from inscription where id_inscription=%s",(id,))
             return True
         except Exception as e:
             print(str(e))

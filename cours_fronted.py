@@ -24,7 +24,7 @@ class Cours:
         self.fen.geometry("980x900+150+0")
         self.fen.resizable(0,0)
         self.fen.configure(background='#51a596')
-        self.side_bar=Sidebar_proviseur(self.fen,self.connexion.get_curseur())
+        self.side_bar=Sidebar_proviseur(self.fen,self.connexion)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Gestion des cours",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)

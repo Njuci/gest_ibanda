@@ -9,6 +9,7 @@
 # Path: side_bar_tutulaire.py
 # Compare this snippet from side_bar.py:
 from tkinter import *
+#from fiche_descotes import fiche_descotes as fiche_cotes
 
 class SideBar_tutulaire:
     def __init__(self, fen,cursor=None):
@@ -44,4 +45,5 @@ class SideBar_tutulaire:
         print("statistiques")
     def palmares(self):
         print("palmares")
+# Compare this snippet from side_bar.py:
 # Compare this snippet from treeEdit.py:

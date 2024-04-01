@@ -5,7 +5,11 @@ avec tkinter tkinter.ttk et tkcalendar
 en mettant les elves, les classses et les anne_scollaire dans des combobox
 et en mettant le meme sidebar
 """
-from titulaire import fiche_cote_back as fch
+import sys
+sys.path.append('/accessoir')
+sys.path.append('/titulaire')
+sys.path.append('/secretaire')
+import fiche_cote_back as fch
 
 from tkinter import *
 from tkinter.ttk import Combobox
@@ -25,7 +29,7 @@ class InscriptionFront:
         self.connexion=connection
         self.fen=Tk()
         self.fen.title("Inscription")
-        self.fen.geometry("900x700+150+0")
+        self.fen.geometry("1000x700+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
         self.side_bar=side_bar.SideBar(self.fen,self.connexion)
@@ -46,13 +50,13 @@ class InscriptionFront:
         self.combo_anne.place(x=550,y=200,width=200)
         self.id_inscription_LABEL= Label(self.fen,text="Id de l'inscription:",font=("Times",15),fg="black",background='#51a596')
         self.id_inscription_LABEL.place(x=305,y=250,width=250)
-        self.id_inscription=Entry(self.fen,bd=4,font=("Arial",15))
+        self.id_inscription=Label(self.fen,font=("Arial",15),text='')
         self.id_inscription.place(x=550,y=250,width=200)
         
         self.remplir_combo()
         self.bouton_ajouter=Button(self.fen,text='Ajouter', background='#FF4500',font=("Times",16),fg='white',command=self.ajouter)
         self.bouton_ajouter.place(x=350,y=300,width=100)
-        self.bouton_modifier=Button(self.fen,text='Modifier', background='#FF4500',font=("Times",16),fg='white',command=self.modify)
+        self.bouton_modifier=Button(self.fen,text='Modifier', background='#FF4500',font=("Times",16),fg='white',command=self.modifier)
         self.bouton_modifier.place(x=500,y=300,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
         self.bouton_supprimer.place(x=650,y=300,width=100)
@@ -72,18 +76,21 @@ class InscriptionFront:
         #affichage des inscriptions ajouter dans un treeview le nom et l'id de l'eleve, le nom et l'id de la classe et l'annee scolaire
 
 
-        self.tree=Treeview(self.fen, columns=('Id','Id_el','Eleve','Classe','Annee scolaire','Id Inscr'), show='headings')
+        self.tree=Treeview(self.fen, columns=('Id','Id_el','Eleve','Classe','Nom','Annee scolaire','Id Inscr'), show='headings')
         self.tree.heading('Id', text='Id')
         self.tree.heading('Id_el', text='Id_el')
         self.tree.heading('Eleve', text='Eleve')
         self.tree.heading('Classe', text='Classe')
+        self.tree.heading('Nom',text='Nom classe')
         self.tree.heading('Annee scolaire', text='Annee scolaire')
         self.tree.heading('Id Inscr', text='Id Inscr')
 
         self.tree.column('Id',width=20)
-        self.tree.column('Id_el',width=40)
+        self.tree.column('Id_el',width=100)
         self.tree.column('Eleve',width=100)
         self.tree.column('Classe',width=100)
+        self.tree.column('Nom',width=100)    
+        
         self.tree.column('Annee scolaire',width=100)
         self.tree.column('Id Inscr',width=100)
         self.tree.place(x=300,y=350,height=200)
@@ -99,25 +106,30 @@ class InscriptionFront:
         self.tree.delete(*self.tree.get_children())
         self.E=Inscription_back("",0,0)
         #compyer le nombre d'inscriptions
-        inscription=self.E.get_all(self.connexion.get_curseur())
+        inscription=self.E.get_all_b(self.connexion.get_curseur())
         #remplir le treeview avec les inscriptions id et nom de l'eleve, id et nom de la classe et l'annee scolaire
         cpt=0
         #afficher les inscriptions
         for row in inscription:
             cpt+=1
-            self.tree.insert("",END,values=(cpt,row[0],row[1],row[2],row[3],row[4]))
-            
+            self.tree.insert("",END,values=(cpt,row[0],row[1],row[3],row[4],row[2]+'|'+row[6],row[5]))
+        self.tree.bind('<Double-1>',self.selection)
     def selection(self,evt):
-        self.selected_id=self.tree.item(self.tree.selection())['values'][0]
+        self.selected_id=self.tree.item(self.tree.selection())['values'][6]
         self.clean_entry()
         row=self.tree.item(self.tree.selection())
-        self.combo_eleve.set(row['values'][2])
-        self.combo_classe.set(row['values'][3])
-        self.combo_anne.set(row['values'][4])
+       
+        self.combo_eleve.set(row['values'][1]+'|'+ row['values'][2])
+        self.combo_classe.set(row['values'][3]+'|'+row['values'][4])
+        self.combo_anne.set(row['values'][5])
+        #self.id_inscription['text']=row[6]
+        #set la valeur de l' id inscription dans lelabel id_inscription
+        self.id_inscription['text']=row['values'][6]
     def clean_entry(self):
         self.combo_eleve.set('')
         self.combo_classe.set('')
         self.combo_anne.set('')
+        self.id_inscription['text']=''
     def ajouter(self):
         self.connexion.db.autocommit=False
         #start transaction
@@ -152,9 +164,14 @@ class InscriptionFront:
                         
                     else:
                         self.connexion.db.rollback()
-                        showerror('Fiche des cotes', "Veuillez terminer la configuration de la classe")
+                        showerror('Fiche ', "Veuillez terminer la configuration de la classe")
+                
+                self.afficher()
+                self.E=None
+                showinfo("Succès","Ajout réussi")
                 self.connexion.db.commit()
             else:
+                showerror('Fiche ', "Veuillez terminer la configuration de la classe")
                 self.connexion.db.rollback()
                 
                 #commit
@@ -167,15 +184,78 @@ class InscriptionFront:
             #creer une transaction qui permet de donner 0 à l'eleve pour chaque cours de la classe ou il est inscrit maintenant
             
             
-            self.afficher()
-            self.E=None
-            showinfo("Succès","Ajout réussi")
         else:
             showerror("Echec","Ajout échoué")
+            self.E=None 
+            self.connexion.db.rollback()    
+            self.connexion.db.autocommit=True
+    #faire une methode pour modifier une inscription en se basant sur la fonction self.ajoouter 
+    #et en ajoutant une transaction pour modifier les notes des eleves
+    #faire une methode pour supprimer une inscription en se basant sur la fonction self.ajoouter
+    #et en ajoutant une transaction pour supprimer les notes des eleves
+    def modifier(self):
+        self.E=Inscription_back(self.combo_eleve.get().split("|")[0],self.combo_anne.get().split("|")[0],self.combo_classe.get().split("|")[0])
+        self.E.id_inscription=self.selected_id
+        
+        
+        self.connexion.db.autocommit=False
+        #start transaction
+        self.connexion.db.start_transaction()
+        
+        self.E.delete_fiche(self.connexion.get_curseur(),self.selected_id)
+        cour=cours.cours_back("","","","","")
+        #recuperer les cours de la classe
+        resultat=cour.get_cours_by_classe(self.connexion.get_curseur(),self.combo_classe.get().split("|")[0])
+        print(resultat)
+        
+        if self.E:
+                
+            
+            if self.E.update(self.connexion.get_curseur(),self.selected_id):
+                if len(resultat)!=0:
+                    for i in resultat:
+                        print(i[0])
+                        fiche=fch.Fiche_cote_back(i[0],self.selected_id,0,0,0,0,0,0)
+                        if fiche.add_fiche_cote(self.connexion.curseur):
+                            print()
+                            
+                        else:
+                            self.connexion.db.rollback()
+                            showerror('Fiche ', "Veuillez terminer la configuration de la classe")
+                            self.connexion.db.autocommit=True
 
+                            
+                
+                    self.afficher()
+                    self.E=None
+                    showinfo("Succès","Modification réussie")
+                    self.connexion.db.commit()
+                    self.connexion.db.autocommit=True
+                else:
+                    self.afficher()
+                    self.E=None
+                    showerror('Fiche ', "Veuillez terminer la    configuration de la classe")
+                    self.connexion.db.autocommit=True
+                
+            else:
+                showerror("Echec","Modification échouée")
+                self.E=None
+                self.connexion.db.rollback()
+                self.connexion.db.autocommmit=True
+        else:
+            showwarning("Echec","Veuillez vider le formulaire")
+            self.connexion.db.rollback()
+    
+            self.connexion.db.autocommit=True
+        
+    
+    
+    #
     def modify(self):
         if self.E==None:
             self.E=Inscription_back(0,self.combo_eleve.get(),self.combo_classe.get(),self.combo_anne.get())
+            
+            
             if self.E.update(self.connexion.get_curseur(),self.selected_id):
                 self.afficher()
                 

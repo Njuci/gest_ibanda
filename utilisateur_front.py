@@ -6,6 +6,7 @@ from login_back import Connexion
 from tkinter import ttk
 from tkinter.messagebox import showinfo,showerror,showwarning
 from user_back import User_back
+from accessoir import generate_key as gn
 #ajouter un interface permetttant d'ajouter, modifier, et supprimer et afficher les users
 class utilisateur_front:
     def __init__(self):
@@ -16,7 +17,7 @@ class utilisateur_front:
         self.fen.geometry("800x600+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
-        self.side_bar=Sidebar_proviseur(self.fen,self.connexion.get_curseur())
+        self.side_bar=Sidebar_proviseur(self.fen,self.connexion)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Utilisateur",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
@@ -56,8 +57,8 @@ class utilisateur_front:
         self.tree.heading('password',text='Password')
         self.tree.heading('role',text='Role')
         self.tree.column('Num',width=50)
-        self.tree.column('id',width=50)
-        self.tree.column('username',width=100)
+        self.tree.column('id',width=80)
+        self.tree.column('username',width=120)
         self.tree.column('password',width=100)
         self.tree.column('role',width=100)
         self.afficher()
@@ -71,9 +72,23 @@ class utilisateur_front:
         username=self.username.get()
         password=self.password.get()
         role=self.role.get()
+        
         user=User_back(username,password,role)
-        if user.save(self.connexion.get_curseur()):
+        id=user.get_last_id(self.connexion.get_curseur())
+        if id[1]==True:
+            f=id[0][0]
+            
+            if  id[0][0] ==None:
+                f=1
+            else:
+                f=id[0][0]+1
+    
+            key=gn.generate_key("US",5,f)
+            
+        
+        if user.save(self.connexion.get_curseur(),key):
             showinfo("Ajout","Utilisateur ajouté avec succès")
+            self.clear_champs()
             self.afficher()
         else:
             showerror("Erreur","Erreur lors de l'ajout de l'utilisateur")
@@ -81,16 +96,16 @@ class utilisateur_front:
         self.tree.delete(*self.tree.get_children())
         users=User_back("","","").get_all(self.connexion.get_curseur())
         cpt=0
-        print(len(users))
         for user in users:
             cpt+=1
-            user=(cpt,user[0],user[1],user[2],user[3])
+            user=(cpt,user[1],user[2],user[3],user[4])
             self.tree.insert('','end',values=user)
         self.tree.bind('<Double-Button-1>',self.get_selected)
         self.tree.place(x=300,y=300)
     def supprimer(self):
         username=self.username.get()
         user=User_back(username,"","")
+        
         if user.delete(self.connexion.get_curseur()):
             showinfo("Suppression","Utilisateur supprimé avec succès")
             self.afficher()
@@ -99,7 +114,7 @@ class utilisateur_front:
     def clear_champs(self):
         self.username.set('')
         self.password.set('')
-        self.role.set('')
+        
     #pour recuperer les champs
     def get_champs(self):
         username=self.username.get()
@@ -114,13 +129,13 @@ class utilisateur_front:
         user=User_back(username,password,role)
         if user.update(self.connexion.get_curseur(),self.get_old_username()):
             showinfo("Modification","Utilisateur modifié avec succès")
+            self.clear_champs()
             self.afficher()
         else:
             showerror("Erreur","Erreur lors de la modification de l'utilisateur")
     #pour recuperer un utilisateur selectionné
     def get_selected(self,event):
         self.selected=self.tree.item(self.tree.selection())['values']
-        print(self.selected)
         self.username.set(self.selected[2])
         self.password.set(self.selected[3])
         self.role.set(self.selected[4])

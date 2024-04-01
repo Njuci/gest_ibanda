@@ -1,9 +1,9 @@
 #ense basant sur les formulaire 
 from tkinter import *
-import side_bar_tutulaire
+import side_bar_tutulaire as side_bar_tutulaire
 from tkinter.messagebox import showerror,showinfo
 from tkinter import ttk
-import treeEdit
+import treeEdit as treeEdit
 from fiche_cote_back import Fiche_cote_back
 from login_back import Connexion
 from cours_backend import cours_back
@@ -78,9 +78,14 @@ class fiche_descotes:
     def remplir_combobox(self):
         #remplir la combobox avec les cours de la classe
         cour=cours_back("","",0,0,0)
-        a=cour.get_cours_by_classe(self.connexion.curseur,1)
-        self.cours['values']=str(a[0][0])+'|'+a[0][1]
-    
+        a=cour.get_cours_by_classe(self.connexion.curseur,'Cl001')
+        print(a)
+        data=[]
+        
+        for i in a:
+            data.append(str(i[0]) +"|"+i[1])
+        print(data)
+        self.cours['values']=data
     def fenetre(self):
       return self.fen
   #decomposer les valeurs pour les inserer dans la base de donnees
@@ -134,7 +139,7 @@ class fiche_descotes:
     #afficher les cotes des eleves
     def afficher(self,event):
         fiche=Fiche_cote_back(0,0,0,0,0,0,0,0)
-        a=fiche.get_fiche_cote_by_id_cours_by_id_class_and_id_anne(self.connexion.curseur,self.cours.get().split('|')[0],1,1)
+        a=fiche.get_fiche_cote_by_id_cours_by_id_class_and_id_anne(self.connexion.curseur,self.cours.get().split('|')[0],'Cl001','AN0001')
         #effacer les anciennes valeurs
         for i in self.tree.get_children():
             self.tree.delete(i)
@@ -165,13 +170,10 @@ class fiche_descotes:
         print(a)
         periode=a[1]
         examen=a[0]
-        print("examen",examen,"periode",periode)
-        print("values",values)
         if values[0]>periode or values[1]>periode or values[2]>examen or values[3]>periode or values[4]>periode or values[5]>examen:
             return False
         else:
             return True
-        
-f=fiche_descotes(Connexion())
-f.fenetre().mainloop()
+
 #c'était juste une blague
+fiche_descotes(Connexion()).fenetre().mainloop()

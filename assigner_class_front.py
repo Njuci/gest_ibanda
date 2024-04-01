@@ -11,21 +11,21 @@ from tkinter import *
 from tkinter.messagebox import showerror,showinfo
 from assigner_class_back import Assigner_class_back
 from user_back import User_back
-from secretaire.classe_backend import Classe
+from secretaire import classe_backend 
 from secretaire.anne_scolaire_back import AnneScolaire
 from tkinter.ttk import Treeview
 from login_back import Connexion
 from tkinter import ttk
-from side_bar_proviseur import Sidebar_proviseur
+import side_bar_proviseur 
 class Assigner_class_front:
-    def __init__(self):
+    def __init__(self,connexion):
         self.fen=Tk()
-        self.connexion=Connexion()
+        self.connexion=connexion
         self.fen.title("Assigner classe")
         self.fen.geometry("800x600")
         self.fen.resizable(0,0)
         self.fen.configure(background='#51a596')
-        self.side_bar=Sidebar_proviseur(self.fen,self.connexion.get_curseur())
+        self.side_bar=side_bar_proviseur.Sidebar_proviseur(self.fen,self.connexion)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Assigner classe",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
@@ -47,6 +47,7 @@ class Assigner_class_front:
         self.bouton_modifier.place(x=500,y=250,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
         self.bouton_supprimer.place(x=650,y=250,width=100)
+        self.remplir_combo()
         self.id_tutilaire=IntVar()
         self.id_class=IntVar()
         self.id_anne_scolaire=IntVar()
@@ -57,11 +58,11 @@ class Assigner_class_front:
         self.tree.heading('id_class',text='Classe')
         self.tree.heading('id_anne_scolaire',text='Année scolaire')
         self.tree.column('Num',width=50)
-        self.tree.column('id_tutilaire',width=50)
+        self.tree.column('id_tutilaire',width=80)
         self.tree.column('Nom Titulaire',width=100)
-        self.tree.column('id_class',width=100)
-        self.tree.column('id_anne_scolaire',width=100)
-        self.run()
+        self.tree.column('id_class',width=120)
+        self.tree.column('id_anne_scolaire',width=150)
+        self.afficher()
     def ajouter(self):
         
         assign=Assigner_class_back(self.combo_tutilaire.get().split('|')[0],self.combo_class.get().split('|')[0],self.combo_anne_scolaire.get().split('|')[0])
@@ -106,8 +107,9 @@ class Assigner_class_front:
             self.tree.insert('','end',values=(cpt,row[0],row[1],str(row[2])+"|"+row[3],str(row[4])+"|"+row[5]))
         self.tree.bind('<Double-Button-1>',self.get_selection)
         
+        self.tree.place(x=250,y=300)
+        
     def get_selection(self,event):
-        print(self.tree.selection())
         self.selected=self.tree.item(self.tree.selection()[0])['values']
         #renplir les combobox avec les valeurs 
         print(self.selected)
@@ -121,11 +123,11 @@ class Assigner_class_front:
         #remplir la combobox titulaire
         user=User_back("","","")
         data=user.get_all_tutilaire(self.connexion.get_curseur())
-        self.combo_tutilaire['values']=[(str(row[0])+"|"+row[1]) for row in data]
+        self.combo_tutilaire['values']=[(str(row[1])+"|"+row[2]) for row in data]
         self.combo_tutilaire.bind('<<ComboboxSelected>>',self.get_id_tutilaire)
         #remplir la combobox classe
         
-        classe=Classe("")
+        classe=classe_backend.Classe("")
         data=classe.get_all(self.connexion.get_curseur())
         self.combo_class['values']=[(str(data[0])+"|"+data[1]) for data in data]
         self.combo_class.bind('<<ComboboxSelected>>',self.get_id_class)
@@ -142,11 +144,7 @@ class Assigner_class_front:
     def get_id_anne_scolaire(self,event):
         self.id_anne_scolaire.set(self.combo_anne_scolaire.get().split('|')[0])
     def run(self):
-        self.remplir_combo()
+        
         self.afficher()
-        self.tree.place(x=300,y=300)
     def fenetre(self):
         return self.fen
-if __name__ == '__main__':
-    assign=Assigner_class_front()
-    assign.fenetre().mainloop()

@@ -11,6 +11,7 @@ en tant que proviseur, je veux avoir un side bar qui me permettra de naviguer da
 en se basamnt sur la classe Sidebar dans le fichier side_bar.py
 """
 from tkinter import Frame, Label, Button
+import assigner_class_front as assign
 class Sidebar_proviseur(Frame):
     def __init__(self, fen,cursor=None):
         self.fen = fen
@@ -35,18 +36,21 @@ class Sidebar_proviseur(Frame):
         self.bouton_rapport = Button(self.MenuContainer, text="Rapports", font="Arial 12")
         self.bouton_rapport.place(x=30, y=300, width=190, height=40)
         # bouton pour la gestion des anne scolaire
-        self.bouton_annee = Button(self.MenuContainer, text="Annees", font="Arial 12")
+        self.bouton_annee = Button(self.MenuContainer, text="Assiner classe", font="Arial 12",command=self.assigenr_classe)
         self.bouton_annee.place(x=30, y=350, width=190, height=40)
         # bouton pour la gestion des palmarea
         self.bouton_palmares = Button(self.MenuContainer, text="Palmares", font="Arial 12")
         self.bouton_palmares.place(x=30, y=400 ,width=190, height=40)
 
 
-        
     def place(self, x, y):
         self.MenuContainer.place(x=x, y=y)
     def save(self):
             pass
+    def assigenr_classe(self):
+        self.fen.destroy()
+        assign.Assigner_class_front(self.curseur)
+        
 # Path: side_bar.py
 # Compare this snippet from side_bar_provieir.py:
 # """

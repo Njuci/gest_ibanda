@@ -17,6 +17,16 @@ class User_back:
         except Exception as e:
             showerror("Erreur",str(e)) 
             return False
+    
+    def get_last_id(self,curseur):
+        try:
+            curseur.execute("select max(id) from utilisateur")
+            f=[curseur.fetchone(),True]
+            
+            return f
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False,False
         
     def get_username(self): 
         return self.username
@@ -26,14 +36,14 @@ class User_back:
         return self.type
     def get_all(self,curseur):
         try:
-            curseur.execute("select * from utilisateur")
+            curseur.execute("select * from utilisateur order by id_user")
             return curseur.fetchall()
         except Exception as e:
             showerror("Erreur",str(e))
             return False
     def get_all_tutilaire(self,curseur):
         try:
-            curseur.execute("select * from utilisateur where user_type='tutilaire'")
+            curseur.execute("select * from utilisateur where user_type='tutilaire' order by id_user")
             return curseur.fetchall()
         except Exception as e:
             showerror("Erreur",str(e))
@@ -41,9 +51,9 @@ class User_back:
 
     
     
-    def save(self,curseur):
+    def save(self,curseur,id):
         try:
-            curseur.execute("insert into utilisateur(username,pass_word,user_type) values(%s,%s,%s)",(self.username,self.mdp,self.type))
+            curseur.execute("insert into utilisateur(id_user,username,pass_word,user_type) values(%s,%s,%s,%s)",(id,self.username,self.mdp,self.type))
             return True
         except Exception as e:
             showerror("Erreur",str(e))

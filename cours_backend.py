@@ -95,11 +95,11 @@ class cours_back:
             return False
       def get_cours_by_classe(self,cursor,id_class):
          try:
-            cursor.execute("select id_cours from cours where id_class=%s", (id_class,))
+            cursor.execute("select id_cours,nom_cours from cours where id_class=%s", (id_class,))
             return cursor.fetchall()
          except Exception as e:
             showerror("Error", str(e))
-            return False
+            return False,True
       def get_cours_by_domaine(self,cursor,id_dom):
          try:
             cursor.execute("select * from cours where id_dom=%s", (id_dom,))

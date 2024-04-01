@@ -96,5 +96,5 @@ constraint pf_cours_dommaine_cours foreign key (id_dom) references domaine_cours
   constraint pf_id_cours foreign key (id_cours) references cours(id_cours) on delete cascade on update cascade,
   constraint pf_id_inscription foreign key (id_inscription) references inscription(id_inscription) on delete cascade on update cascade
 
-)
+);
  
