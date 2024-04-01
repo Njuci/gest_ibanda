@@ -36,6 +36,13 @@ class Assigner_class_back:
             showerror("Erreur",str(e))
             return False
     
+    def get_all_c(self,curseur,id_user):
+        try:
+            curseur.execute("select A.id_tutilaire,B.username,A.id_class,C.nom,A.id_anne_scolaire,D.nom from assigner_class A join utilisateur B on A.id_tutilaire = B.id_user join  classe C on A.id_class = C.id_class join anne_scolaire D on A.id_anne_scolaire = D.id where A.id_tutilaire=%s",(id_user,))
+            return curseur.fetchall()
+        except Exception as e:          
+            showerror("Erreur",str(e))
+            return False
     def save(self,curseur):
         try:
             curseur.execute("insert into assigner_class(id_tutilaire,id_class,id_anne_scolaire) values(%s,%s,%s)",(self.id_tutilaire,self.id_class,self.id_anne_scolaire))

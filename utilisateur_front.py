@@ -2,15 +2,14 @@
 from tkinter import *
 from side_bar_proviseur import Sidebar_proviseur
 from tkinter.messagebox import showerror
-from login_back import Connexion
 from tkinter import ttk
 from tkinter.messagebox import showinfo,showerror,showwarning
 from user_back import User_back
-from accessoir import generate_key as gn
+import generate_key as gn
 #ajouter un interface permetttant d'ajouter, modifier, et supprimer et afficher les users
 class utilisateur_front:
-    def __init__(self):
-        self.connexion=Connexion()
+    def __init__(self,connnexion):
+        self.connexion=connnexion
     
         self.fen=Tk()
         self.fen.title("Utilisateur")
@@ -139,8 +138,9 @@ class utilisateur_front:
         self.username.set(self.selected[2])
         self.password.set(self.selected[3])
         self.role.set(self.selected[4])
-
-utilisateur_front()
+    def fenetre(self):
+        return self.fen
+#utilisateur_front()
 
         
         

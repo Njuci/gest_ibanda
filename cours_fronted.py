@@ -15,7 +15,7 @@ from domaine_cours_back import Domaine_cours
 from side_bar_proviseur import Sidebar_proviseur
 from login_back import Connexion
 from secretaire.classe_backend import Classe
-import accessoir.generate_key as gn 
+import generate_key as gn 
 class Cours:
     def __init__(self,root):
         self.fen = root

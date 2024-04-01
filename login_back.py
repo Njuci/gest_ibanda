@@ -24,4 +24,6 @@ class Connexion:
         return self.curseur
     def get_parametres_connexion(self):
         return self.db
-    
+    def close(self):
+        self.db.close()
+        self.curseur.close()

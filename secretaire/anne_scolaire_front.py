@@ -25,7 +25,7 @@ pour eviter l'erreur d'importation circulaire j'importe d'une autre manière
 """
 
 from . import side_bar 
-import accessoir.generate_key as gn
+import generate_key as gn
 
 class anne_scolaire:
     def __init__(self,connection):

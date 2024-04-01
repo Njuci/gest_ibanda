@@ -21,7 +21,7 @@ from tkinter.messagebox import showerror,showinfo,showwarning,askyesno
 from .eleve_back import eleve_back
 from .classe_backend import Classe
 from .anne_scolaire_back import AnneScolaire
-import accessoir.generate_key as gn
+import generate_key as gn
 import cours_backend as cours
 from tkinter.messagebox import showerror
 class InscriptionFront:

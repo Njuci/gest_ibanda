@@ -8,20 +8,20 @@ e fichier domaine_cours_front.py est un fichier qui contient une classe qui perm
 from tkinter import *
 from tkinter.ttk import Treeview
 from domaine_cours_back import Domaine_cours
-from login_back import Connexion
-from side_bar_proviseur import Sidebar_proviseur
+#from login_back import Connexion
+import side_bar_proviseur
 from tkinter.messagebox import showerror,showinfo
 from tkinter import ttk
-import accessoir.generate_key as gn
+import generate_key as gn
 class Domaine_cours_front:
-    def __init__(self):
+    def __init__(self,conexion):
         self.fen=Tk()
-        self.connexion=Connexion()
+        self.connexion=conexion
         self.fen.title("Domaine de cours")
         self.fen.geometry("800x600")
         self.fen.resizable(0,0)
         self.fen.configure(background='#51a596')
-        self.side_bar=Sidebar_proviseur(self.fen,self.connexion.get_curseur())
+        self.side_bar=side_bar_proviseur.Sidebar_proviseur(self.fen,self.connexion)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Domaine de cours",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
@@ -34,7 +34,7 @@ class Domaine_cours_front:
         self.bouton_modifier=Button(self.fen,text='Modifier', background='#FF4500',font=("Times",16),fg='white',command=self.modifier)
         self.bouton_modifier.place(x=500,y=150,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
-        self.bouton_supprimer.place(x=650,y=150,width=100)
+        self.bouton_supprimer.place(x=650,y= 150,width=100)
         self.id_domaine=StringVar()
         self.tree=ttk.Treeview(self.fen,columns=('Num','id_domaine','Nom'),show='headings')
         self.tree.heading('Num',text='Numéro')
@@ -133,7 +133,10 @@ class Domaine_cours_front:
             showerror("Erreur","Erreur lors de la suppression du domaine")
     def run(self):
         self.afficher()
-        self.fen.mainloop()
-d=Domaine_cours_front()
+    def fenetre(self):
+        return self.fen
+        
+    
+#d=Domaine_cours_front()
 # d.run()
 # d.fen.mainloop()  

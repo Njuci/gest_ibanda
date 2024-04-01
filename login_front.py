@@ -3,6 +3,7 @@ from tkinter.messagebox import showerror,showinfo,showwarning
 from login_back import Connexion
 from user_back import User_back
 import secretaire.anne_scolaire_front as anne_scolaire_front 
+import utilisateur_front 
 class Login_front:
     def __init__(self):
         self.fen=Tk()
@@ -48,6 +49,11 @@ class Login_front:
                             self.fen.destroy()
                             anne=anne_scolaire_front.anne_scolaire(con)
                             anne.fenetre().mainloop()
+                        elif type[0][0]=="proviseur":
+                            self.fen.destroy()
+                            user=utilisateur_front.utilisateur_front(con)
+                            user.fenetre().mainloop()
+                            
 
 
 

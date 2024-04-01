@@ -13,7 +13,7 @@ lieu_nais varchar(30)
 en se basant sur les codes de class_front 
 je fais une interface graphique d'ajout, de modification et de suppression d'un élève et en metant le meme sidebar
 """
-import accessoir.generate_key as gn
+import generate_key as gn
 import datetime as dt
 from tkcalendar import DateEntry
 from tkinter import *
