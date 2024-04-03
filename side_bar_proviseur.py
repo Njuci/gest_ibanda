@@ -12,6 +12,10 @@ en se basamnt sur la classe Sidebar dans le fichier side_bar.py
 """
 from tkinter import Frame, Label, Button
 import assigner_class_front as assign
+import utilisateur_front
+import domaine_cours_frontemd
+import cours_fronted
+#import secretaire.classe_front
 class Sidebar_proviseur(Frame):
     def __init__(self, fen,cursor=None):
         self.fen = fen
@@ -21,22 +25,20 @@ class Sidebar_proviseur(Frame):
         self.titre = Label(self.MenuContainer, text="GEST IBANDA", font="Arial 15 bold", bg='#51a596', fg='black')
         self.titre.place(x=30, y=20)
         # bouton pour la gestion des classes
-        self.bouton_classe = Button(self.MenuContainer, text="Classes", font="Arial 12")
-        self.bouton_classe.place(x=30, y=100,width=190,height=40)
         # bouton pour la gestion des utilisateurs
-        self.bouton_utilisateur = Button(self.MenuContainer, text="Utilisateurs", font="Arial 12")
+        self.bouton_utilisateur = Button(self.MenuContainer, text="Utilisateurs", font="Arial 12",command=self.user)
         self.bouton_utilisateur.place(x=30, y=150 ,width=190, height=40)
         # bouton pour la gestion des matieres
-        self.bouton_matiere = Button(self.MenuContainer, text="Matieres", font="Arial 12")
+        self.bouton_matiere = Button(self.MenuContainer, text="Cours", font="Arial 12",command=self.cours)
         self.bouton_matiere.place(x=30, y=200 ,width=190, height=40)
         # bouton pour la gestion des domaines de cours
-        self.bouton_domaine = Button(self.MenuContainer, text="Domaines", font="Arial 12")
+        self.bouton_domaine = Button(self.MenuContainer, text="Domaines", font="Arial 12",command=self.domaine)
         self.bouton_domaine.place(x=30, y=250 ,width=190, height=40)
         # bouton pour la gestion des rapports de notes
         self.bouton_rapport = Button(self.MenuContainer, text="Rapports", font="Arial 12")
         self.bouton_rapport.place(x=30, y=300, width=190, height=40)
         # bouton pour la gestion des anne scolaire
-        self.bouton_annee = Button(self.MenuContainer, text="Assiner classe", font="Arial 12",command=self.assigenr_classe)
+        self.bouton_annee = Button(self.MenuContainer, text="Assigner classe", font="Arial 12",command=self.assigenr_classe)
         self.bouton_annee.place(x=30, y=350, width=190, height=40)
         # bouton pour la gestion des palmarea
         self.bouton_palmares = Button(self.MenuContainer, text="Palmares", font="Arial 12")
@@ -47,6 +49,20 @@ class Sidebar_proviseur(Frame):
         self.MenuContainer.place(x=x, y=y)
     def save(self):
             pass
+    def domaine(self):
+        self.fen.destroy()
+        domain_f=domaine_cours_frontemd.Domaine_cours_front(self.curseur)
+        domain_f.fenetre().mainloop()
+    def user(self):
+        self.fen.destroy()
+        user=utilisateur_front.utilisateur_front(self.curseur)
+        user.fenetre().mainloop()
+    def cours(self):
+        self.fen.destroy()
+        cour=cours_fronted.Cours(self.curseur)
+        cour.fenetre().mainloop()
+
+    
     def assigenr_classe(self):
         self.fen.destroy()
         assign.Assigner_class_front(self.curseur)

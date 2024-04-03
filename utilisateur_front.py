@@ -1,6 +1,6 @@
 
 from tkinter import *
-from side_bar_proviseur import Sidebar_proviseur
+import side_bar_proviseur
 from tkinter.messagebox import showerror
 from tkinter import ttk
 from tkinter.messagebox import showinfo,showerror,showwarning
@@ -16,7 +16,7 @@ class utilisateur_front:
         self.fen.geometry("800x600+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
-        self.side_bar=Sidebar_proviseur(self.fen,self.connexion)
+        self.side_bar=side_bar_proviseur.Sidebar_proviseur(self.fen,self.connexion)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Utilisateur",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)

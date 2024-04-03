@@ -22,7 +22,7 @@ class Assigner_class_front:
         self.fen=Tk()
         self.connexion=connexion
         self.fen.title("Assigner classe")
-        self.fen.geometry("800x600")
+        self.fen.geometry("800x600+150+0")
         self.fen.resizable(0,0)
         self.fen.configure(background='#51a596')
         self.side_bar=side_bar_proviseur.Sidebar_proviseur(self.fen,self.connexion)

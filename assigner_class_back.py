@@ -27,7 +27,7 @@ class Assigner_class_back:
           
             showerror("Erreur",str(e))
             return False
-    def get_all_b(self,curseur):
+    def get_all_b(self,curseur,id):
         try:
             curseur.execute("select A.id_tutilaire,B.username,A.id_class,C.nom,A.id_anne_scolaire,D.nom from assigner_class A join utilisateur B on A.id_tutilaire = B.id_user join  classe C on A.id_class = C.id_class join anne_scolaire D on A.id_anne_scolaire = D.id")
             return curseur.fetchall()

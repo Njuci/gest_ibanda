@@ -18,7 +18,7 @@ class Domaine_cours_front:
         self.fen=Tk()
         self.connexion=conexion
         self.fen.title("Domaine de cours")
-        self.fen.geometry("800x600")
+        self.fen.geometry("800x600+150+0")
         self.fen.resizable(0,0)
         self.fen.configure(background='#51a596')
         self.side_bar=side_bar_proviseur.Sidebar_proviseur(self.fen,self.connexion)
@@ -34,7 +34,7 @@ class Domaine_cours_front:
         self.bouton_modifier=Button(self.fen,text='Modifier', background='#FF4500',font=("Times",16),fg='white',command=self.modifier)
         self.bouton_modifier.place(x=500,y=150,width=100)
         self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
-        self.bouton_supprimer.place(x=650,y= 150,width=100)
+        self.bouton_supprimer.place(x=650,y=150,width=100)
         self.id_domaine=StringVar()
         self.tree=ttk.Treeview(self.fen,columns=('Num','id_domaine','Nom'),show='headings')
         self.tree.heading('Num',text='Numéro')

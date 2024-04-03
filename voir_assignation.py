@@ -4,17 +4,17 @@ from tkinter import *
 from tkinter import ttk
 import assigner_class_back
 
-from login_back import Connexion
+#from login_back import Connexion
 from tkinter import ttk
 import sys
-
+import fiche_descotes
 class voir_assignassignation:
-    def __init__(self) :
-        self.id_user=0
+    def __init__(self,indentifant) :
+        self.id_user=indentifant['id_user']
         self.id_classe=0
         self.id_annee_scolaire=0
         self.fen=Tk()
-        self.connexion=Connexion()
+        self.connexion=indentifant['connexion']
         self.fen.title("Voir Assignation des classes")
         self.fen.geometry("800x600")
         self.fen.resizable(0,0)
@@ -39,7 +39,7 @@ class voir_assignassignation:
     def afficher(self):
         self.tree.delete(*self.tree.get_children())
         assignation=assigner_class_back.Assigner_class_back("","","")
-        data=assignation.get_all(self.connexion.get_curseur())
+        data=assignation.get_all_c(self.connexion.get_curseur(),self.id_user)
         print(data[0])
         i=0
         for row in data:
@@ -56,15 +56,13 @@ class voir_assignassignation:
         self.id_annee_scolaire=self.tree.item(item,'values')[2].split('|')[0]
         self.id_classe=self.tree.item(item,'values')[3].split('|')[0]
         self.id_titulaire=self.tree.item(item,'values')[3].split('|')[0]
-    
+        print(self.id_user,self.id_annee_scolaire,self.id_classe,self.id_titulaire)
     def manager(self):
         self.fen.destroy()
+        identifiant={'id_user':self.id_titulaire,'id_classe':self.id_annee_scolaire,'id_annee_scolaire':self.id_user,'id_titulaire':self.id_titulaire,'connexion':self.connexion}
+        fiche=fiche_descotes.fiche_descotes(identifiant)
+        fiche.fenetre().mainloop()
         
         print(self.id_user)
     def fenetre(self):
         return self.fen 
-
-if __name__ == '__main__':
-    voir_assignassignation().fenetre().mainloop()
-    
-    

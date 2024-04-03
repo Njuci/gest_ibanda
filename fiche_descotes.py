@@ -5,12 +5,15 @@ from tkinter.messagebox import showerror,showinfo
 from tkinter import ttk
 import treeEdit as treeEdit
 from fiche_cote_back import Fiche_cote_back
-from login_back import Connexion
+#from login_back import Connexion
 from cours_backend import cours_back
 
 class fiche_descotes:
     def __init__(self,connection):
-        self.connexion=connection
+        self.connexion=connection['connexion']
+        self.id_user=connection['id_user']
+        self.id_classe=connection['id_classe']
+        self.id_anne_scolaire=connection['id_annee_scolaire']    
     
         self.fen=Tk()
         self.new_values=None
@@ -72,14 +75,13 @@ class fiche_descotes:
    #avoir les nouvelles valeurs     
     def avoir_nouvelles_valeurs(self,values):
         self.new_values=values
-        print(self.new_values)
         self.decomposer_valeur(self.cours,self.new_values)
 #remplir la combobox avec les cours de la classe
     def remplir_combobox(self):
         #remplir la combobox avec les cours de la classe
         cour=cours_back("","",0,0,0)
-        a=cour.get_cours_by_classe(self.connexion.curseur,'Cl001')
-        print(a)
+        a=cour.get_cours_by_classe(self.connexion.curseur,self.id_classe)
+        
         data=[]
         
         for i in a:
@@ -139,7 +141,7 @@ class fiche_descotes:
     #afficher les cotes des eleves
     def afficher(self,event):
         fiche=Fiche_cote_back(0,0,0,0,0,0,0,0)
-        a=fiche.get_fiche_cote_by_id_cours_by_id_class_and_id_anne(self.connexion.curseur,self.cours.get().split('|')[0],'Cl001','AN0001')
+        a=fiche.get_fiche_cote_by_id_cours_by_id_class_and_id_anne(self.connexion.curseur,self.cours.get().split('|')[0],self.id_classe,self.id_anne_scolaire)
         #effacer les anciennes valeurs
         for i in self.tree.get_children():
             self.tree.delete(i)
@@ -176,4 +178,3 @@ class fiche_descotes:
             return True
 
 #c'était juste une blague
-fiche_descotes(Connexion()).fenetre().mainloop()

@@ -4,6 +4,7 @@ from login_back import Connexion
 from user_back import User_back
 import secretaire.anne_scolaire_front as anne_scolaire_front 
 import utilisateur_front 
+import voir_assignation
 class Login_front:
     def __init__(self):
         self.fen=Tk()
@@ -53,6 +54,11 @@ class Login_front:
                             self.fen.destroy()
                             user=utilisateur_front.utilisateur_front(con)
                             user.fenetre().mainloop()
+                        elif type[0][0]=="tutilaire":
+                            self.fen.destroy()
+                            identifiant={'connexion':con,'id_user':type[0][1]}
+                            assign=voir_assignation.voir_assignassignation(identifiant)
+                            assign.fenetre().mainloop()
                             
 
 

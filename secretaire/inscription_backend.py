@@ -36,6 +36,18 @@ class Inscription_back:
             print(str(e))
             return False
     
+    def get_all_elve_par_classe_annescol(self,curseur):
+        try:
+            curseur.execute("select inscription.id_eleve, eleve.nom_eleve,inscription.id_anne_scol,inscription.id_class,cl.nom ,inscription.id_inscription from eleve"+
+                            " join inscription on inscription.id_eleve=eleve.id_eleve join classe cl on cl.id_class=inscription.id_class whwere  ")
+            
+            
+            return curseur.fetchall()
+        except Exception as e:
+            print(str(e))
+            return False
+    
+    
     #delete fiche_cote by id_inscription
     def delete_fiche(self,curseur,id):
         try:

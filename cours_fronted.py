@@ -12,19 +12,19 @@ from tkinter import ttk
 from tkinter.messagebox import showerror,showinfo
 from cours_backend import cours_back
 from domaine_cours_back import Domaine_cours
-from side_bar_proviseur import Sidebar_proviseur
-from login_back import Connexion
+import side_bar_proviseur 
+#from login_back import Connexion
 from secretaire.classe_backend import Classe
 import generate_key as gn 
 class Cours:
-    def __init__(self,root):
-        self.fen = root
-        self.connexion=Connexion()
+    def __init__(self,connexion):
+        self.fen = Tk()
+        self.connexion=connexion
         self.fen.title("Gestion des cours")
         self.fen.geometry("980x900+150+0")
         self.fen.resizable(0,0)
         self.fen.configure(background='#51a596')
-        self.side_bar=Sidebar_proviseur(self.fen,self.connexion)
+        self.side_bar=side_bar_proviseur.Sidebar_proviseur(self.fen,self.connexion)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Gestion des cours",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
@@ -155,9 +155,3 @@ class Cours:
         self.id_cours=self.selected[1]
     def fenetre(self):
         return self.fen
-
-if __name__=='__main__' :
-    s=Cours(Tk())
-    s.fenetre().mainloop()   
-    
-        

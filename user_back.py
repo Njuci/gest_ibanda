@@ -75,7 +75,7 @@ class User_back:
     
     def user_type(self,curseur):
         try:
-            curseur.execute("select user_type from utilisateur where username=%s and pass_word=%s",(self.username,self.mdp))
+            curseur.execute("select user_type,id_user from utilisateur where username=%s and pass_word=%s",(self.username,self.mdp))
             return curseur.fetchall()
         except Exception as e:
             showerror("Erreur",str(e))
