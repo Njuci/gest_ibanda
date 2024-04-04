@@ -40,6 +40,22 @@ class eleve_back:
         self.sexe = sexe
         self.date_nais = date_nais
         self.lieu_nais = lieu_nais
+    def get_eleve(self,curseur,id):
+        try:
+            curseur.execute("select * from eleve where id_eleve=%s", (id,))
+            return curseur.fetchone()
+        except Exception as e:
+            showerror('error',str(e))
+            
+    def get_eleve_inscrit(self,curseur,id_anne_scol,id_class):
+        try:
+            curseur.execute("select e.id_eleve,e.nom_eleve,e.sexe,e.lieu_nais,e.date_nais,i.id_inscription from inscription i join eleve e on  i.id_eleve=e.id_eleve where i.id_anne_scol=%s and id_class=%s ",(id_anne_scol,id_class))
+            return curseur.fetchall()
+        except Exception as e:
+            print(str(e))
+            return False
+            
+    
     def get_eleves(self,curseur,id_anne,id_classe):
         """
         voir les eleves d'une classe pour annee scolaire

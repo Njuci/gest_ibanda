@@ -9,10 +9,11 @@
 # Path: side_bar_tutulaire.py
 # Compare this snippet from side_bar.py:
 from tkinter import *
+import fiche_descotes 
 #from fiche_descotes import fiche_descotes as fiche_cotes
-
+import liste_eleve_tut
 class SideBar_tutulaire:
-    def __init__(self, fen,cursor=None):
+    def __init__(self, fen,cursor):
         self.fen = fen
         self.curseur = cursor
         self.MenuContainer = Frame(self.fen, height=800, width=230, bg='#51a596')
@@ -34,9 +35,13 @@ class SideBar_tutulaire:
     def place(self, x, y):
         self.MenuContainer.place(x=x, y=y)
     def fiche_cotes(self):
-        print("fiche de cotes")
+        self.fen.destroy()
+        fiche=fiche_descotes.fiche_descotes(connection=self.curseur)
+        fiche.fenetre().mainloop()        
     def liste_eleves(self):
-        print("liste des élèves")
+        self.fen.destroy()
+        liste=liste_eleve_tut.ListeEleveTut(self.curseur)   
+        liste.fenetre().mainloop()
     def liste_cours(self):
         print("liste des cours")
     def bulletins(self):

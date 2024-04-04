@@ -14,7 +14,8 @@ class fiche_descotes:
         self.id_user=connection['id_user']
         self.id_classe=connection['id_classe']
         self.id_anne_scolaire=connection['id_annee_scolaire']    
-    
+        identifiant={'id_user':self.id_user,'id_classe':self.id_classe,'id_annee_scolaire':self.id_anne_scolaire,'connexion':self.connexion}
+        
         self.fen=Tk()
         self.new_values=None
     
@@ -22,7 +23,7 @@ class fiche_descotes:
         self.fen.geometry("900x600+150+0")
         self.fen.resizable(False,False)
         self.fen.configure(background='#51a596')
-        self.side_bar=side_bar_tutulaire.SideBar_tutulaire(self.fen,self.connexion)
+        self.side_bar=side_bar_tutulaire.SideBar_tutulaire(self.fen, identifiant)
         self.side_bar.place(x=0,y=0)
         self.label_titre=Label(self.fen, borderwidth=3,relief=SUNKEN,text="Fiche des cotes",font=("Sans Serif",16),fg='white',background='#091821')
         self.label_titre.place(x=300,y=0,width=500,height=80)
