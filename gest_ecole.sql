@@ -71,8 +71,7 @@ id int auto_increment unique,
 id_dom varchar(10) primary key,
 nom_dom varchar(30) unique
  );
- 
---  
+   
  create table cours(
  id int unique auto_increment,
  id_cours varchar(10) primary key,
