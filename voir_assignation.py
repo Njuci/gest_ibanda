@@ -40,7 +40,7 @@ class voir_assignassignation:
         self.tree.delete(*self.tree.get_children())
         assignation=assigner_class_back.Assigner_class_back("","","")
         data=assignation.get_all_c(self.connexion.get_curseur(),self.id_user)
-        print(data[0])
+ 
         i=0
         for row in data:
             self.tree.insert('','end',iid=i,values=(i+1,row[4]+'|'+row[5],row[2]+'|'+row[3],row[0]+'|'+row[1],))
@@ -63,6 +63,5 @@ class voir_assignassignation:
         fiche=fiche_descotes.fiche_descotes(identifiant)
         fiche.fenetre().mainloop()
         
-        print(self.id_user)
     def fenetre(self):
         return self.fen 

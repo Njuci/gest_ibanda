@@ -10,8 +10,10 @@
 # Compare this snippet from side_bar.py:
 from tkinter import *
 import fiche_descotes 
-#from fiche_descotes import fiche_descotes as fiche_cotes
+#from fiche_descotes import fiche_detscotes as fiche_cotes
 import liste_eleve_tut
+import bulettin
+import palmares_tut
 class SideBar_tutulaire:
     def __init__(self, fen,cursor):
         self.fen = fen
@@ -45,10 +47,15 @@ class SideBar_tutulaire:
     def liste_cours(self):
         print("liste des cours")
     def bulletins(self):
-        print("bulletins")
+        self.fen.destroy()
+        bulletin=bulettin.bulletin(self.curseur)
+        bulletin.fenetre().mainloop()
     def statistiques(self):
         print("statistiques")
     def palmares(self):
-        print("palmares")
+        self.fen.destroy()
+        palmares=palmares_tut.palmares_tutilaire(self.curseur)
+        palmares.fen.mainloop()
+        
 # Compare this snippet from side_bar.py:
 # Compare this snippet from treeEdit.py:

@@ -53,6 +53,25 @@ class cours_back:
             showerror("Error", str(e))
             return False
       
+      def get_maximas_classe(self,cursor,id_class):
+         query=f"""
+            SELECT DISTINCT sum(c.max_period)as p1,sum(c.max_period)as p2,SUM(c.max_exam)as ex1,sum((c.max_period*2)+c.max_exam) as S1,
+            sum(c.max_period)as p3,sum(c.max_period)as p4,SUM(c.max_exam)as ex2,sum((c.max_period*2)+c.max_exam) as S2,sum((c.max_period*2)+c.max_exam)*2 as total
+            FROM cours c
+            JOIN classe cl ON cl.id_class = c.id_class
+            WHERE c.id_class = {id_class!r}       
+               """
+               
+         print(query)
+         try:
+            cursor.execute(query)
+            return cursor.fetchall()
+         except Exception as e:
+            showerror("Error", str(e))
+            return False
+         
+         
+      
       def get_all(self,cursor):
          try:
             cursor.execute("select cr.id_cours,cr.nom_cours,cr.id_dom,dom.nom_dom,cr.max_period,cr.max_exam,cr.id_class,cl.nom from cours cr join domaine_cours dom on cr.id_dom =dom.id_dom join classe cl on cr.id_class =cl.id_class")
