@@ -15,7 +15,7 @@ et la méthode execute doit retourner False si l'insertion a échoué
 et la méthode save doit retourner True si l'insertion a réussi
 """
 from tkinter import *
-from tkinter.messagebox import showerror,showinfo,showwarning
+from tkinter.messagebox import showerror,showinfo,showwarning,askyesno
 from .anne_scolaire_back import AnneScolaire
 from tkinter.ttk import Treeview
 #from side_bar import SideBar   
@@ -78,9 +78,10 @@ class anne_scolaire:
         self.tree.tag_configure('red', background="red")
         self.remplir_tree()
         self.tree.place(x=350,y=250)
-    def supprier(self):
+    def supprimer(self):
         self.get_entry()
         annee=AnneScolaire(self.selected_annee,self.selected_statut)
+        showwarning("Avertissement","en suprimant l'annee scolaire vous allex")
         if annee.delete(self.connexion.get_curseur()):
             showinfo("succès","l'année scolaire a été supprimée")
             self.clean_entry()
@@ -100,6 +101,7 @@ class anne_scolaire:
     def ajouter(self):
 
         annee=AnneScolaire(self.tex_nom.get(),self.radio_encours.get())
+        
         id=annee.get_last_id(self.connexion.get_curseur())
         if id[1]==True:
             f=id[0][0]

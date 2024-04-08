@@ -41,9 +41,9 @@ class AnneScolaire:
             print(str(e))
             return False
     #Effacer une année scolaire sans effacer les classes et les élèves ET les notes
-    def delete(self,curseur):
+    def delete(self,curseur,id):
         try:
-            curseur.execute("delete from anne_scolaire where nom=%s",(self.nom,))
+            curseur.execute("delete from anne_scolaire where id=%s",(id,))
             return True
         except Exception as e:
             print(str(e))
