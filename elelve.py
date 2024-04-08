@@ -18,11 +18,11 @@ import datetime as dt
 from tkcalendar import DateEntry
 from tkinter import *
 from tkinter.messagebox import showerror,showinfo,showwarning
-from . eleve_back import eleve_back
+from secretaire.eleve_back import eleve_back
 #from login_back import Connexion
 #from side_bar import SideBar
 from tkinter.ttk import Treeview,Combobox
-from . import side_bar
+from secretaire import side_bar
 import report
 import login_back 
 class EleveFront:

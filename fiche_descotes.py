@@ -7,6 +7,7 @@ import treeEdit as treeEdit
 from fiche_cote_back import Fiche_cote_back
 #from login_back import Connexion
 from cours_backend import cours_back
+from report import generate_pdf_fiche_cote
 
 class fiche_descotes:
     def __init__(self,connection):
@@ -87,7 +88,7 @@ class fiche_descotes:
         
         for i in a:
             data.append(str(i[0]) +"|"+i[1])
-        print(data)
+      
         self.cours['values']=data
     def fenetre(self):
       return self.fen
@@ -164,7 +165,44 @@ class fiche_descotes:
                 cpt=cpt+1
 
     def imprimer(self):
-        pass
+        import webbrowser
+        from secretaire.classe_backend import Classe
+        from secretaire.anne_scolaire_back import AnneScolaire
+        file_name=f"/fiche_cote{self.id_anne_scolaire}_{self.cours.get().split('|')[0]}_{self.id_classe}.pdf"
+        print(self.id_anne_scolaire,self.id_classe)
+        
+        headers_row=('IDInscription  Nom', 'P1', 'P2','EX1','P3','P4','EX2')
+        informations={"classe": "", "cours": "", "annee_scolaire": ""}
+        
+        classe_obj = Classe("")
+        
+        
+        classe_nom = classe_obj.get_nom2(self.connexion.get_curseur(), self.id_classe)
+        print(classe_nom)
+        data=[]
+        for i in classe_nom:
+            data.append(i)
+        classe_nom = data[2]
+        
+        if classe_nom is not None:
+            informations["classe"] = classe_nom
+        
+        informations["cours"] = self.cours.get().split('|')[1]
+        anne_obj=AnneScolaire("", 0)
+        anne_nom =""
+        data=[]
+        for i in  anne_obj.get_nom_bd(self.connexion.get_curseur(), self.id_anne_scolaire):
+            data.append(i)
+        
+        anne_nom = data[2]
+        if anne_nom is not None:
+            informations["annee_scolaire"] = anne_nom
+        
+        file= generate_pdf_fiche_cote(self.tree,file_name,headers_row,"Fiche des cotes",informations,[
+     [150, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75],30],"pdf/fiche_cote")
+        print(file)
+        webbrowser.open(rf'{file}')
+        
     #verifier si les valeurs ne sont pas grandes que les periodes et les examens
     def verifier_valeurs(self,values):
         id_cours=self.cours.get().split('|')[0]

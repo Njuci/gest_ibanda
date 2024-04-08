@@ -1,0 +1,6 @@
+[mysql]
+host = 192.168.16.103
+user = njuci
+password = 1234567890
+database = gest_ecole
+

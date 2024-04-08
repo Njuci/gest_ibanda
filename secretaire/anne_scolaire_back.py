@@ -58,3 +58,15 @@ class AnneScolaire:
         except Exception as e:
             showerror("Erreur",str(e))
             return False,False
+    
+    def get_nom_bd(self,curseur,id):
+        ff=f"""select * from anne_scolaire where id={id!r}"""
+        print(ff)
+        try:
+            
+            curseur.execute(ff)
+            return curseur.fetchone()
+         
+        except Exception as e:
+            showerror("Erreur",str(e))
+            return False

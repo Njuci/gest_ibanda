@@ -12,6 +12,7 @@ from cours_backend import cours_back as Cours
 from fiche_cote_back import Fiche_cote_back as Fiche_cote
 from secretaire.anne_scolaire_back import AnneScolaire
 from cours_backend import cours_back as cours
+from report import generate_pdf_fiche_cote
 class palmares_tutilaire:
     def __init__(self,connexion):
         self.connexion=connexion['connexion']
@@ -77,6 +78,7 @@ class palmares_tutilaire:
             self.tree.insert("",'end',values=row)
         self.tree.place(x=300,y=200)
     def imprimer(self):
+        
         
         pass
     def fenetre(self):

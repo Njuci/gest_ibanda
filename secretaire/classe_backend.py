@@ -61,7 +61,7 @@ class Classe:
     def get_id(self,curseur):
         try:
             curseur.execute("select id_class from classe where nom=%s",(self.nom,))
-            return curseur.fetchone()[0]
+            return curseur.fetchall()
         except Exception as e:
             print(str(e))
             return False
@@ -69,6 +69,21 @@ class Classe:
         try:
             curseur.execute("select nom from classe where id_class=%s",(self.nom,))
             return curseur.fetchone()[0]
+        except Exception as e:
+            print(str(e))
+            return False
+    
+    def get_nom2(self,curseur,id):
+        ff=f"""select * from classe where id_class={id!r}"""
+        print(ff)
+        a=0
+        
+        curseur.execute(ff)
+        a=curseur.fetchone()
+        print(curseur.fetchone())
+        try:
+            
+            return a
         except Exception as e:
             print(str(e))
             return False
