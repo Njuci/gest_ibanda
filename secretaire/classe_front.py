@@ -13,7 +13,7 @@ avec tkinter
 
 """
 from tkinter import *
-from tkinter.messagebox import showerror,showinfo,showwarning
+from tkinter.messagebox import showerror,showinfo,showwarning,askyesno
 from .classe_backend import Classe
 from tkinter.ttk import Treeview
 #from side_bar import SideBar
@@ -105,13 +105,20 @@ class ClasseFront:
     def supprimer(self):
         if self.E==None:
             self.E=Classe(self.tex_nom.get())
-            self.E=None
-            if self.E.delete(self.connexion.get_curseur()):
-                self.afficher()
-                showinfo("Succès","Suppression réussie")
+            
+            if askyesno("Confirmation", "Êtes-vous sûr de vouloir supprimer cette classe ?"):
+                if self.E.delete(self.connexion.get_curseur()):
+                    self.afficher()
+                    self.E=None
+                    showinfo("Succès", "Suppression réussie")
+                else:
+                    self.E=None
+                    showerror("Echec", "Suppression échouée")
             else:
-                showerror("Echec","Suppression échouée")
+                self.E=None
+                showinfo("Annulation", "Suppression annulée")
         else:
+            self.E=None
             showwarning("Echec","Veuillez vider le formulaire")
     def afficher(self):
         self.tree.delete(*self.tree.get_children())

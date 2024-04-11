@@ -57,7 +57,7 @@ class anne_scolaire:
         self.bouton_ajouter.place(x=350,y=200,width=100)
         self.bouton_modifier=Button(self.fen,text='Modifier', background='#FF4500',font=("Times",16),fg='white',command=self.modify)
         self.bouton_modifier.place(x=500,y=200,width=100)
-        self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.modify)
+        self.bouton_supprimer=Button(self.fen,text='Supprimer', background='#FF4500',font=("Times",16),fg='white',command=self.supprimer)
         self.bouton_supprimer.place(x=650,y=200,width=100)
         self.selected_id=IntVar()
         self.selected_annee=StringVar()
@@ -81,13 +81,17 @@ class anne_scolaire:
     def supprimer(self):
         self.get_entry()
         annee=AnneScolaire(self.selected_annee,self.selected_statut)
-        showwarning("Avertissement","en suprimant l'annee scolaire vous allex")
-        if annee.delete(self.connexion.get_curseur()):
-            showinfo("succès","l'année scolaire a été supprimée")
-            self.clean_entry()
-            self.remplir_tree()
+        showwarning("Avertissement","en suprimant l'annee scolaire vous allez aussi supprimer ses dependances")
+        if askyesno("Avis","voulez-vous vraiment effacer"):
+            if annee.delete(self.connexion.get_curseur()):
+                showinfo("succès","l'année scolaire a été supprimée")
+                self.clean_entry()
+                self.remplir_tree()
+            else:
+                showerror("Erreur","l'année scolaire n'a pas été supprimée")
+    
         else:
-            showerror("Erreur","l'année scolaire n'a pas été supprimée")
+            showwarning("Avis","l'année scolaire n'a pas été supprimée")
     
     def modify(self):
         self.get_entry()

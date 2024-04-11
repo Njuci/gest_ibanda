@@ -14,6 +14,8 @@ import fiche_descotes
 import liste_eleve_tut
 import bulettin
 import palmares_tut
+import orientation
+import secretaire.classe_backend as classe_backend
 class SideBar_tutulaire:
     def __init__(self, fen,cursor):
         self.fen = fen
@@ -34,6 +36,19 @@ class SideBar_tutulaire:
         self.bouton_statistiques.place(x=20, y=320, width=190, height=40)
         self.bouton_palmares = Button(self.MenuContainer, text='Palmares', command=self.palmares)
         self.bouton_palmares.place(x=20, y=380, width=190, height=40)
+        #bouton d'orientation
+        #n'est visible que pour les titulaires a 8ème qui vont voir cette option
+        #tout en sachant que dans le cursuer on a l'id de la classe donc je peux savoir le nom de la classe et donc afficher ou pas le boutonù
+        self.bouton_orientation=Button(self.MenuContainer,text='Orientation',command=self.orientation)
+        self.nom_classe=classe_backend.Classe(cursor['id_classe'])
+        self.connexion=cursor['connexion']
+        
+        self.nom_clas=self.nom_classe.get_nom(cursor['connexion'].get_curseur())                                      
+        if "8" in self.nom_clas:
+            self.bouton_orientation.place(x=20,y=440,width=190,height=40)
+        else:
+            print("pas de bouton orientation")       
+        
     def place(self, x, y):
         self.MenuContainer.place(x=x, y=y)
     def fiche_cotes(self):
@@ -56,6 +71,11 @@ class SideBar_tutulaire:
         self.fen.destroy()
         palmares=palmares_tut.palmares_tutilaire(self.curseur)
         palmares.fen.mainloop()
+    def orientation(self):
+        self.fen.destroy()
+        orienta=orientation.orientation(self.curseur)
+        orienta.fen.mainloop()
         
-# Compare this snippet from side_bar.py:
-# Compare this snippet from treeEdit.py:
+        
+        
+# Compare this snippet from fiche_descotes.py:

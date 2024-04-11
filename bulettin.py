@@ -19,6 +19,7 @@ from cours_backend import cours_back as Cours
 from fiche_cote_back import Fiche_cote_back as Fiche_cote
 from secretaire.anne_scolaire_back import AnneScolaire
 from cours_backend import cours_back as cours
+from BullModel import PdfBulletin
 class bulletin:
     def __init__(self,connexion):
         self.connexion=connexion['connexion']
@@ -29,6 +30,8 @@ class bulletin:
                      'id_classe':self.id_classe,
                      'id_annee_scolaire':self.id_anne_scolaire,
                      'connexion':self.connexion}
+        
+        self.DataBull=[]
 
         self.fen=Tk()
         self.fen.title("Bulletins")
@@ -45,8 +48,14 @@ class bulletin:
         self.label_classe1.place(x=400,y=100)
         self.label_eleve=Label(self.fen,text="Eleve",font=("Sans Serif",12),fg='white',background='#51a596')
         self.label_eleve.place(x=300,y=150)
+
         self.combo_eleve=ttk.Combobox(self.fen,font=("Sans Serif",12))
         self.combo_eleve.place(x=400,y=150)
+
+        self.bouton_GenBull=Button(self.fen,text='BULL PDF', background='#FF4500',font=("Times",16),fg='white',command=self.getBullPdf)
+        self.bouton_GenBull.place(x=700,y=130)
+
+
         self.bouton_afficher=Button(self.fen,text='Afficher', background='#FF4500',font=("Times",16),fg='white',command=self.afficher)
         self.tree=ttk.Treeview(self.fen,columns=('Cours','Periode 1','Periode 2','Examen1','Semestre1','Periode 3','Periode 4','Examen2','Semestre2','Total'),show='headings')
         
@@ -83,7 +92,9 @@ class bulletin:
         
         self.remplir_combo()
         self.afficher(None)
-        
+    
+    def getBullPdf(self):
+        Bulletin=PdfBulletin(self.DataBull)
     def remplir_combo(self):
         eleve=Eleve("", "", "", "", "")
         eleves=eleve.get_eleve_inscrit(self.connexion.get_curseur(),self.id_anne_scolaire,self.id_classe)
@@ -97,6 +108,7 @@ class bulletin:
         fiche_cote=Fiche_cote("", "",0,0,0,0,0,0)
         maximas=cours("","",0,0,"").get_maximas_classe(self.connexion.get_curseur(),self.id_classe)
         cotes=fiche_cote.get_resultat_par_eleve(self.connexion.get_curseur(),id_eleve)
+        self.DataBull=cotes
         palmares=fiche_cote.palmares(self.connexion.get_curseur(),self.id_classe,self.id_anne_scolaire,id_eleve)
         for i,cote in enumerate(cotes):
             if i%2==0:

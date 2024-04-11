@@ -64,9 +64,6 @@ class InscriptionFront:
         self.bouton_chercher=Button(self.fen,text='Chercher', background='#FF4500',font=("Times",16),fg='white',command=self.afficher)
         self.bouton_chercher.place(x=800,y=300,width=100)
        #bouton pour afficher chercher les inscriptions par classer et par annee scolaire
-        self.bouton_chercher=Button(self.fen,text='Chercher', background='#FF4500',font=("Times",16),fg='white',command=self.afficher)
-        self.bouton_chercher.place(x=800,y=300,width=100)
-
         
         self.selected_id=StringVar()
         self.selected_eleve=StringVar()
@@ -192,65 +189,46 @@ class InscriptionFront:
     #faire une methode pour modifier une inscription en se basant sur la fonction self.ajoouter 
     #et en ajoutant une transaction pour modifier les notes des eleves
     #faire une methode pour supprimer une inscription en se basant sur la fonction self.ajoouter
-    #et en ajoutant une transaction pour supprimer les notes des eleves
+    #et en ajoutant imer les notes des eleves
     def modifier(self):
-        self.E=Inscription_back(self.combo_eleve.get().split("|")[0],self.combo_anne.get().split("|")[0],self.combo_classe.get().split("|")[0])
-        self.E.id_inscription=self.selected_id
-        
-        
         self.connexion.db.autocommit=False
-        #start transaction
+    #start transaction
         self.connexion.db.start_transaction()
-        
-        self.E.delete_fiche(self.connexion.get_curseur(),self.selected_id)
+
+        self.E=Inscription_back(self.combo_eleve.get().split("|")[0],self.combo_anne.get().split("|")[0],self.combo_classe.get().split("|")[0])
         cour=cours.cours_back("","","","","")
         #recuperer les cours de la classe
         resultat=cour.get_cours_by_classe(self.connexion.get_curseur(),self.combo_classe.get().split("|")[0])
         print(resultat)
-        
-        if self.E:
-                
-            
-            if self.E.update(self.connexion.get_curseur(),self.selected_id):
-                if len(resultat)!=0:
-                    for i in resultat:
-                        print(i[0])
-                        fiche=fch.Fiche_cote_back(i[0],self.selected_id,0,0,0,0,0,0)
-                        if fiche.add_fiche_cote(self.connexion.curseur):
-                            print()
-                            
-                        else:
-                            self.connexion.db.rollback()
-                            showerror('Fiche ', "Veuillez terminer la configuration de la classe")
-                            self.connexion.db.autocommit=True
 
-                            
-                
-                    self.afficher()
-                    self.E=None
-                    showinfo("Succès","Modification réussie")
-                    self.connexion.db.commit()
-                    self.connexion.db.autocommit=True
-                else:
-                    self.afficher()
-                    self.E=None
-                    showerror('Fiche ', "Veuillez terminer la    configuration de la classe")
-                    self.connexion.db.autocommit=True
-                
-            else:
-                showerror("Echec","Modification échouée")
+        if self.E.update(self.connexion.get_curseur(), self.selected_id):
+            if len(resultat)!=0:
+
+                for i in resultat:
+                    print(i[0])
+                    fiche=fch.Fiche_cote_back(i[0],self.selected_id,0,0,0,0,0.0)
+
+                    if not fiche.update_fiche_cote(self.connexion.curseur):
+                        self.connexion.db.rollback()
+                        showerror('Fiche ', "Veuillez terminer la configuration de la classe")
+
+                self.afficher()
                 self.E=None
+                showinfo("Succès","Modification réussie")
+                self.connexion.db.commit()
+            else:
+                showerror('Fiche ', "Veuillez terminer la configuration de la classe")
                 self.connexion.db.rollback()
-                self.connexion.db.autocommmit=True
-        else:
-            showwarning("Echec","Veuillez vider le formulaire")
-            self.connexion.db.rollback()
-    
+
+            #commit
             self.connexion.db.autocommit=True
-        
-    
-    
-    #
+
+        else:
+            showerror("Echec","Modification échouée")
+            self.E=None 
+            self.connexion.db.rollback()    
+            self.connexion.db.autocommit=True    
+        #
     def modify(self):
         if self.E==None:
             self.E=Inscription_back(0,self.combo_eleve.get(),self.combo_classe.get(),self.combo_anne.get())
