@@ -193,7 +193,8 @@ FROM RankedStudents /*where*/ ;
   FROM RankedStudents;
   
   
-  SELECT DISTINCT sum(c.max_period)as p1,sum(c.max_period)as p2,SUM(c.max_exam)as ex1,sum((c.max_periode*2)+c.max_exam)
+  SELECT DISTINCT sum(c.max_period)as p1,sum(c.max_period)as p2,SUM(c.max_exam)as ex1,sum((c.max_period*2)+c.max_exam) as S1,
+  sum(c.max_period)as p3,sum(c.max_period)as p4,SUM(c.max_exam)as ex2,sum((c.max_period*2)+c.max_exam) as S2,sum((c.max_period*2)+c.max_exam)*2 as total
           FROM cours c
           JOIN classe cl ON cl.id_class = c.id_class
           WHERE c.id_class = 'Cl001'

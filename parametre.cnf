@@ -1,5 +1,5 @@
 [mysql]
-host = localhost
+host = 192.168.155.226
 user = njuci
 password = 1234567890
 database = gest_ecole
